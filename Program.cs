@@ -10,7 +10,7 @@ namespace Assignment_cet2007
     {
         static void Main(string[] args)
         {
-           
+            Console.WriteLine("hello world");
         }
     }
 }
