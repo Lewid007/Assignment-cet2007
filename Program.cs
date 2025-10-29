@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Security;
@@ -28,17 +29,25 @@ namespace Assignment_cet2007
             }
             public void describe()
             {
-                Console.WriteLine(Name + " " + Ip_Address + " " + Id_Unique);
+                Console.WriteLine("The name of the device added is "+ Name+ ".It has an Ip Address of " + Ip_Address + "and a unique value of " + Id_Unique +".");
             }
         }
         
         
         static void Main(string[] args)    /// main program
         {
-           var D1 = new Device("Printer" , 1 , 12345);
+           
+
+            Console.WriteLine("enter the name of the network device here"); //// takes in the input of the name of the device
+            string Name = Console.ReadLine();
 
 
-            D1.describe();
+            Console.WriteLine("enter the name Ip address of the network device here");
+            int Ip_Address = Convert.ToInt32(Console.ReadLine());  /// takes the input of ip as int for now this needs to be changed data type at some point to all for ipv6 or ipv4 
+            
+            
+            var D2 = new Device(Name, Ip_Address,1); /// setting up an object of the class device - id still needs be made unique this will prevent duplicate objects
+            D2.describe();
 
            
             
