@@ -18,18 +18,35 @@ namespace Assignment_cet2007
         {
             public string Name { get; set; }
             public int Id_Unique { get; set; }
-            public int Ip_Address { get; set; }
+            public string Ip_Address { get; set; }
 
 
-            public Device(string name, int ip_address, int id_unique) 
+            public Device(string name, string ip_address, int id_unique) 
             {
                 this.Name = name;   
                 this.Ip_Address = ip_address;
                 this.Id_Unique = id_unique;
             }
-            public void describe()
+            public void describe()  /// describes the objects attributes
             {
                 Console.WriteLine("The name of the device added is "+ Name+ ".It has an Ip Address of " + Ip_Address + "and a unique value of " + Id_Unique +".");
+            }
+
+            private HashSet<int> id_unique = new HashSet<int>();
+            public void Add_Id_Unique(int id)
+            {
+                try
+                {
+                    if (!id_unique.Add(id))
+                    {
+                        throw new InvalidOperationException("attribute exists");
+
+                    }
+                }
+                catch(InvalidOperationException ex)
+                {
+                    Console.WriteLine($"{ex.Message}");
+                }
             }
         }
         
@@ -42,8 +59,8 @@ namespace Assignment_cet2007
             string Name = Console.ReadLine();
 
 
-            Console.WriteLine("enter the name Ip address of the network device here");
-            int Ip_Address = Convert.ToInt32(Console.ReadLine());  /// takes the input of ip as int for now this needs to be changed data type at some point to all for ipv6 or ipv4 
+            Console.WriteLine("enter the name Ip address of the network device here - please type it in ipv6 format");
+            string Ip_Address = (Console.ReadLine());  /// takes the input of ip as string ipv6 - try and catch blocks will be used to monitor length of input
             
             
             var D2 = new Device(Name, Ip_Address,1); /// setting up an object of the class device - id still needs be made unique this will prevent duplicate objects
