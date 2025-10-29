@@ -16,33 +16,31 @@ namespace Assignment_cet2007
        class Device   /// setting up a device class which is used to create devices on the network system
         {
             public string Name { get; set; }
-            public static Random Id_Unique { get; set; }
+            public int Id_Unique { get; set; }
             public int Ip_Address { get; set; }
 
 
-            public void Network_Device(string name, int ip_address) //// 
+            public Device(string name, int ip_address, int id_unique) 
             {
                 this.Name = name;   
                 this.Ip_Address = ip_address;
+                this.Id_Unique = id_unique;
             }
-
+            public void describe()
+            {
+                Console.WriteLine(Name + " " + Ip_Address + " " + Id_Unique);
+            }
         }
         
         
         static void Main(string[] args)    /// main program
         {
-            Random rnd = new Random();
-            int rndInt = rnd.Next();
-            rnd = Id_Unique;
-            
-            Console.WriteLine("enter the name of the network device here"); //// takes in the input of the name of the device
-            string Name = Console.ReadLine();
+           var D1 = new Device("Printer" , 1 , 12345);
 
-            
-            Console.WriteLine("enter the name Ip address of the network device here");
-            int Ip_Address = Convert.ToInt32(Console.ReadLine());  /// takes the input of ip as int for now this needs to be changed data type at some point to all for ipv6 or ipv4 
 
-            var D1 = new Device();
+            D1.describe();
+
+           
             
         }
     }
