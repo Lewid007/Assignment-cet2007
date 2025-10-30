@@ -27,15 +27,13 @@ namespace Assignment_cet2007
                 this.Ip_Address = ip_address;
                 this.Id_Unique = id_unique;
 
-                Console.WriteLine("enter the name of the network device here"); //// takes in the input of the name of the device
-                string Name = Console.ReadLine();
 
-
-
-                Console.WriteLine("enter the name Ip address of the network device here - please type it in ipv6 format");
-                string Ip_Address = (Console.ReadLine()); /// takes the input of ip as string ipv6 - try and catch blocks will be used to monitor length of input
             }
-            
+
+            class status : Device
+            {
+                
+            }
 
             public void describe()  /// describes the objects attributes
             {
@@ -61,13 +59,19 @@ namespace Assignment_cet2007
         }
 
 
-        static void Main(string[] args, string Ip_Address, string Name) /// main program
+        static void Main(string[] args) /// main program
         {
-           
 
-            
-            
-            
+
+            Console.WriteLine("enter the name of the network device here"); //// takes in the input of the name of the device
+            string Name = Console.ReadLine();
+
+
+
+            Console.WriteLine("enter the name Ip address of the network device here - please type it in ipv6 format");
+            string Ip_Address = (Console.ReadLine()); /// takes the input of ip as string ipv6 - try and catch blocks will be used to monitor length of input
+
+
             var D1 = new Device(Name, Ip_Address,1); /// setting up an object of the class device - id still needs be made unique this will prevent duplicate objects
             D1.describe();
 
