@@ -13,27 +13,27 @@ namespace Assignment_cet2007
 {
     internal class Program
     {
-      
+
 
         /// <summary>
         /// represents the device class used to link together the main attributes for devices
         /// </summary>
-        class Device   
+        class Device
 
         {
-           
+
             public string Name { get; set; }
             public int IdUnique { get; set; }
             public string IpAddress { get; set; }
 
-           /// <summary>
-           /// Creating an instance of the device class
-           /// </summary>
-           /// <param name="name"></param>
-           /// <param name="ipaddress"></param>
-           /// <param name="idunique"></param>
+            /// <summary>
+            /// Creating an instance of the device class
+            /// </summary>
+            /// <param name="name"></param>
+            /// <param name="ipaddress"></param>
+            /// <param name="idunique"></param>
             public Device(string name, string ipaddress, int idunique)
-            { 
+            {
 
                 this.Name = name;
                 this.IpAddress = ipaddress;
@@ -41,16 +41,26 @@ namespace Assignment_cet2007
 
 
             }
-
-
+            public void setName(string Name)
+            {
+                this.Name = Name;
+            }
+            public void setIpAddress(string IpAddress)
+            {
+                this.IpAddress = IpAddress;
+            }
+            public void setIDUnique(string IpUnique)
+            {
+                this.IpAddress = IpUnique;
+            }
 
             /// <summary>
             /// Describes the attributes
             /// </summary>
-            public void describe()
-            { 
-               
-                Console.WriteLine("The name of the device added is " + Name + ".It has an Ip Address of " + IpAddress + "and a unique value of " + IdUnique + ".");
+            public string Details()
+            {
+
+                return Name + IpAddress + IdUnique;
             }
 
             /*  private HashSet<int> id_unique = new HashSet<int>();
@@ -70,6 +80,7 @@ namespace Assignment_cet2007
                   }
               }
            */
+
         }
         /// <summary>
         /// basic management system to allow a choice of feature- not all features implemenented at this stage
@@ -77,10 +88,11 @@ namespace Assignment_cet2007
         class Manager   
         {
             public int Menu_option { get; private set; }
-
+            public List<Device> network;
             public Manager()
             {
 
+                network = new List<Device>();
                 PrintMenu();
             }
             /// <summary>
@@ -208,24 +220,13 @@ namespace Assignment_cet2007
         static void Main(string[] args)
         {
 
-
-             /*   Console.WriteLine("enter the name of the network device here"); //// takes in the input of the name of the device
-                string Name = Console.ReadLine();
-
-
-
-                Console.WriteLine("enter the name Ip address of the network device here - please type it in ipv6 format");
-                string IpAddress = (Console.ReadLine()); /// takes the input of ip as string ipv6 - try and catch blocks will be used to monitor length of input
-
-
-                var D1 = new Device(Name, IpAddress, 1); /// setting up an object of the class device - id still needs be made unique this will prevent duplicate objects
-            
-            D1.describe();
-            
-            Console.Clear();  /// at the minute the program ask for devices to be entered first so once this is done the console is cleared to bring up the menu - this will change once all menu features are implemented the menu/ welcome screen will be the first aspect of the system the user will interact with.
-            */
-                            Manager manager = new Manager();
-
+            Device device = new Device("Printer", "1234.4567.6789.0001", 10000);
+            Console.WriteLine(device.Details());
+          
+           Console.Clear();  /// at the minute the program ask for devices to be entered first so once this is done the console is cleared to bring up the menu - this will change once all menu features are implemented the menu/ welcome screen will be the first aspect of the system the user will interact with.
+           
+            Manager manager = new Manager();
+           
             
         }
     }
