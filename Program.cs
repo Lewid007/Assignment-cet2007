@@ -13,16 +13,26 @@ namespace Assignment_cet2007
     internal class Program
     {
 
+        /// <summary>
+        /// represents the device class used to link together the main attributes for devices
+        /// </summary>
+        class Device   
 
-        class Device   /// setting up a device class which is used to create devices on the network system
         {
+           
             public string Name { get; set; }
             public int IdUnique { get; set; }
             public string IpAddress { get; set; }
 
+           /// <summary>
+           /// Creating an instance of the device class
+           /// </summary>
+           /// <param name="name"></param>
+           /// <param name="ipaddress"></param>
+           /// <param name="idunique"></param>
+            public Device(string name, string ipaddress, int idunique)
+            { 
 
-            public Device(string name, string ipaddress, int idunique)  ///instance of the device class 
-            {
                 this.Name = name;
                 this.IpAddress = ipaddress;
                 this.IdUnique = idunique;
@@ -32,9 +42,11 @@ namespace Assignment_cet2007
 
 
 
-
-            public void describe()  /// describes the objects attributes
-            {
+            /// <summary>
+            /// Describes the attributes
+            /// </summary>
+            public void describe()
+            { 
                
                 Console.WriteLine("The name of the device added is " + Name + ".It has an Ip Address of " + IpAddress + "and a unique value of " + IdUnique + ".");
             }
@@ -57,16 +69,22 @@ namespace Assignment_cet2007
               }
            */
         }
-        class Manager  /// basic management system to allow a choice of feature- not all features implemenented at this stage
+        /// <summary>
+        /// basic management system to allow a choice of feature- not all features implemenented at this stage
+        /// </summary>
+        class Manager   
         {
-
+            public int Menu_option { get; private set; }
 
             public Manager()
             {
 
-                printMenu();
+                PrintMenu();
             }
-            public void printMenu()
+            /// <summary>
+            /// This method will display the menu and take a user input and match it to the correct choice they pick.
+            /// </summary>
+            public void PrintMenu()
             {
                 Console.WriteLine("1. View All Devices");
                 Console.WriteLine("2. Add Device");
@@ -77,10 +95,20 @@ namespace Assignment_cet2007
                 Console.WriteLine("7. Remove Device");
                 Console.WriteLine("8. View System Health");
                 Console.WriteLine("9. Exit");
+               
+                try
+                {
+                    Console.WriteLine("Enter your menu option here");
+                    int Menu_option = Convert.ToInt32(Console.ReadLine());
+                }
 
 
-                Console.WriteLine("Enter your menu option here");
-                int Menu_option = Convert.ToInt32(Console.ReadLine());
+                catch (FormatException e)
+                {
+                    Console.WriteLine("Invalid data");
+                  
+                }
+                  
                 if (Menu_option == 1)
                 {
                     ViewAll();
@@ -174,7 +202,7 @@ namespace Assignment_cet2007
 
                 var D1 = new Device(Name, IpAddress, 1); /// setting up an object of the class device - id still needs be made unique this will prevent duplicate objects
                 D1.describe();
-            Console.Clear();  /// at the minute the program ask for devices to be entered first so once this is done the console is cleared to bring up the menu - this will change
+            Console.Clear();  /// at the minute the program ask for devices to be entered first so once this is done the console is cleared to bring up the menu - this will change once all menu features are implemented the menu/ welcome screen will be the first aspect of the system the user will interact with.
 
                 Manager manager = new Manager();
 
