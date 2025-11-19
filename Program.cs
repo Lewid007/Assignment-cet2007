@@ -6,12 +6,14 @@ using System.Net;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assignment_cet2007
 {
     internal class Program
     {
+      
 
         /// <summary>
         /// represents the device class used to link together the main attributes for devices
@@ -82,10 +84,11 @@ namespace Assignment_cet2007
                 PrintMenu();
             }
             /// <summary>
-            /// This method will display the menu and take a user input and match it to the correct choice they pick.
+            /// This method will display the menu and take a user input and match it to the correct choice they pick. this could and will likely be changed into an string array to make adding menu items a lot simpler
             /// </summary>
             public void PrintMenu()
             {
+                Console.WriteLine("WELCOME" + Environment.NewLine);
                 Console.WriteLine("1. View All Devices");
                 Console.WriteLine("2. Add Device");
                 Console.WriteLine("3. Edit Device ");
@@ -95,56 +98,71 @@ namespace Assignment_cet2007
                 Console.WriteLine("7. Remove Device");
                 Console.WriteLine("8. View System Health");
                 Console.WriteLine("9. Exit");
-               
+                
                 try
                 {
                     Console.WriteLine("Enter your menu option here");
                     int Menu_option = Convert.ToInt32(Console.ReadLine());
-                }
+                    if (Menu_option <= 1 || Menu_option >= 9)
+                    {
 
+                        Console.WriteLine("Please enter the correct whole number choice you would like to select from this menu. Press enter to continue ");
+                        Console.ReadLine();
+                        PrintMenu();
+                    }
+                    if (Menu_option == 1)
+                    {
+                        ViewAll();
+                    }
+                    if (Menu_option == 2)
+                    {
+                        AddDevice();
+                    }
+                    if (Menu_option == 3)
+                    {
+                        EditDevice();
+                    }
+                    if (Menu_option == 4)
+                    {
+                        SearchDevice();
+                    }
+                    if (Menu_option == 5)
+                    {
+                        UpdateStatus();
+                    }
+                    if (Menu_option == 6)
+                    {
+                        SortDevice();
+                    }
+                    if (Menu_option == 7)
+                    {
+                        RemoveDevice();
+                    }
+                    if (Menu_option == 8)
+                    {
+                        ViewHealth();
+                    }
+                    if (Menu_option == 9)
+                    {
+                        Quit();
+                    }
+
+                }
 
                 catch (FormatException e)
-                {
-                    Console.WriteLine("Invalid data");
+                { 
+
+                    Console.WriteLine(e.ToString() + "Invalid data Press enter to try again");
+                    
+                    Console.ReadLine();
+                    Console.Clear();
+                    PrintMenu();
+
+                }
+                
                   
-                }
-                  
-                if (Menu_option == 1)
-                {
-                    ViewAll();
-                }
-                if (Menu_option == 2)
-                {
-                    AddDevice();
-                }
-                if (Menu_option == 3)
-                {
-                    EditDevice();
-                }
-                if (Menu_option == 4)
-                {
-                    SearchDevice();
-                }
-                if (Menu_option == 5)
-                {
-                    UpdateStatus();
-                }
-                if (Menu_option == 6)
-                {
-                    SortDevice();
-                }
-                if (Menu_option == 7)
-                {
-                    RemoveDevice();
-                }
-                if (Menu_option == 8)
-                {
-                    ViewHealth();
-                }
-                if (Menu_option == 9)
-                {
-                    Quit();
-                }
+                
+              
             }
 
             ///  these are very basic print satements used to test each aspect works and links up correctly from the menu before any more complex development begins
@@ -187,11 +205,11 @@ namespace Assignment_cet2007
             }
 
         }
-        static void Main(string[] args) 
+        static void Main(string[] args)
         {
 
 
-                Console.WriteLine("enter the name of the network device here"); //// takes in the input of the name of the device
+             /*   Console.WriteLine("enter the name of the network device here"); //// takes in the input of the name of the device
                 string Name = Console.ReadLine();
 
 
@@ -201,10 +219,12 @@ namespace Assignment_cet2007
 
 
                 var D1 = new Device(Name, IpAddress, 1); /// setting up an object of the class device - id still needs be made unique this will prevent duplicate objects
-                D1.describe();
+            
+            D1.describe();
+            
             Console.Clear();  /// at the minute the program ask for devices to be entered first so once this is done the console is cleared to bring up the menu - this will change once all menu features are implemented the menu/ welcome screen will be the first aspect of the system the user will interact with.
-
-                Manager manager = new Manager();
+            */
+                            Manager manager = new Manager();
 
             
         }
