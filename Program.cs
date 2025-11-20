@@ -92,7 +92,15 @@ namespace Assignment_cet2007
             public Manager()
             {
 
-                network = new List<Device>();
+                network = new List<Device>()
+
+                
+                /// manualy creating some devices
+                {
+                    new Device("Printer", "123455", 0235454676),
+                    new Device("Laptop", "125667865", 0465673676)
+                }
+                ;
                 PrintMenu();
             }
             /// <summary>
@@ -115,46 +123,46 @@ namespace Assignment_cet2007
                 {
                     Console.WriteLine("Enter your menu option here");
                     int Menu_option = Convert.ToInt32(Console.ReadLine());
-                    if (Menu_option <= 1 || Menu_option >= 9)
+                    if (Menu_option < 1 || Menu_option >= 9)
                     {
 
                         Console.WriteLine("Please enter the correct whole number choice you would like to select from this menu. Press enter to continue ");
                         Console.ReadLine();
                         PrintMenu();
                     }
-                    if (Menu_option == 1)
+                    else if (Menu_option == 1)
                     {
                         ViewAll();
                     }
-                    if (Menu_option == 2)
+                    else  if (Menu_option == 2)
                     {
                         AddDevice();
                     }
-                    if (Menu_option == 3)
+                    else if (Menu_option == 3)
                     {
                         EditDevice();
                     }
-                    if (Menu_option == 4)
+                    else if (Menu_option == 4)
                     {
                         SearchDevice();
                     }
-                    if (Menu_option == 5)
+                    else if (Menu_option == 5)
                     {
                         UpdateStatus();
                     }
-                    if (Menu_option == 6)
+                    else if (Menu_option == 6)
                     {
                         SortDevice();
                     }
-                    if (Menu_option == 7)
+                    else if (Menu_option == 7)
                     {
                         RemoveDevice();
                     }
-                    if (Menu_option == 8)
+                    else if (Menu_option == 8)
                     {
                         ViewHealth();
                     }
-                    if (Menu_option == 9)
+                    else if (Menu_option == 9)
                     {
                         Quit();
                     }
@@ -182,6 +190,13 @@ namespace Assignment_cet2007
             public void ViewAll()
             {
                 Console.WriteLine("View All Devices");
+                int i = 0;
+
+                foreach (Device  device in network)
+                {
+                    i++;
+                    Console.WriteLine(i + "." + device.Details());
+                }
             }
             public void AddDevice()
             {
@@ -220,8 +235,7 @@ namespace Assignment_cet2007
         static void Main(string[] args)
         {
 
-            Device device = new Device("Printer", "1234.4567.6789.0001", 10000);
-            Console.WriteLine(device.Details());
+         
           
            Console.Clear();  /// at the minute the program ask for devices to be entered first so once this is done the console is cleared to bring up the menu - this will change once all menu features are implemented the menu/ welcome screen will be the first aspect of the system the user will interact with.
            
