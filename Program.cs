@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,15 +14,11 @@ namespace Assignment_cet2007
 {
     internal class Program
     {
-
-
         /// <summary>
         /// represents the device class used to link together the main attributes for devices
         /// </summary>
         class Device
-
         {
-
             public string Name { get; set; }
             public int IdUnique { get; set; }
             public string IpAddress { get; set; }
@@ -34,12 +31,9 @@ namespace Assignment_cet2007
             /// <param name="idunique"></param>
             public Device(string name, string ipaddress, int idunique)
             {
-
                 this.Name = name;
                 this.IpAddress = ipaddress;
                 this.IdUnique = idunique;
-
-
             }
             public void setName(string Name)
             {
@@ -49,7 +43,7 @@ namespace Assignment_cet2007
             {
                 this.IpAddress = IpAddress;
             }
-            public void setIDUnique(string IpUnique)
+            public void setIDUnique(string IpUnique)  //// this will be kept at 8 digits starting at 00000001 and will be hidden from the user as it is irelavant as the main purpose is to prevent duplicate items
             {
                 this.IpAddress = IpUnique;
             }
@@ -60,28 +54,10 @@ namespace Assignment_cet2007
             public string Details()
             {
 
-                return Name + IpAddress + IdUnique;
+                return Name +" "+ IpAddress ;
             }
-
-            /*  private HashSet<int> id_unique = new HashSet<int>();
-              public void Add_Id_Unique(int id)
-              {
-                  try
-                  {
-                      if (!id_unique.Add(id))
-                      {
-                          throw new InvalidOperationException("attribute exists");
-
-                      }
-                  }
-                  catch(InvalidOperationException ex)
-                  {
-                      Console.WriteLine($"{ex.Message}");
-                  }
-              }
-           */
-
         }
+
         /// <summary>
         /// basic management system to allow a choice of feature- not all features implemenented at this stage
         /// </summary>
@@ -89,45 +65,57 @@ namespace Assignment_cet2007
         {
             public int Menu_option { get; private set; }
             public List<Device> network;
+            /// <summary>
+            /// creates and instance of the manager class
+            /// </summary>
             public Manager()
             {
-
                 network = new List<Device>()
-
+                { 
+                /// manualy creating some devices  // the format of ipv6 and random numbers still needs to be done
+                    new Device("Printer", "797a:efb2:fd97:368c:e92f:0c7a:d162:8073", 00000001),
+                    new Device("Laptop", "d421:3ebd:a882:984e:1d7c:8c35:4834:d9f7", 00000002)
+                };
                 
-                /// manualy creating some devices
-                {
-                    new Device("Printer", "123455", 0235454676),
-                    new Device("Laptop", "125667865", 0465673676)
-                }
-                ;
                 PrintMenu();
             }
+
             /// <summary>
             /// This method will display the menu and take a user input and match it to the correct choice they pick. this could and will likely be changed into an string array to make adding menu items a lot simpler
             /// </summary>
             public void PrintMenu()
             {
                 Console.WriteLine("WELCOME" + Environment.NewLine);
-                Console.WriteLine("1. View All Devices");
-                Console.WriteLine("2. Add Device");
-                Console.WriteLine("3. Edit Device ");
-                Console.WriteLine("4. Search Device");
-                Console.WriteLine("5. Update Device Status");
-                Console.WriteLine("6. Sort Device");
-                Console.WriteLine("7. Remove Device");
-                Console.WriteLine("8. View System Health");
-                Console.WriteLine("9. Exit");
+                /// creating menu using string array to make adding new items easier in the future
+                string[] menuOptions = new string[]
+                {
+                    "View All Devices",
+                    "Add Device",
+                    "Edit Device ",
+                    "Search Device",
+                    "Update Device Status",
+                    "Sort Device",
+                    "Remove Device",
+                    "View System Health",
+                    "Exit",
+                };
+                /// this for loop adds numbers to the menu options
+                for (int i = 0; i < menuOptions.Length; i++)
+                {
+                    Console.WriteLine(i+1 +"."+ menuOptions[i]);
+                }
                 
                 try
                 {
-                    Console.WriteLine("Enter your menu option here");
+                    Console.WriteLine(Environment.NewLine +"Enter your menu option here");
                     int Menu_option = Convert.ToInt32(Console.ReadLine());
-                    if (Menu_option < 1 || Menu_option >= 9)
+
+                    if (Menu_option < 1 || Menu_option >= menuOptions.Length-1)
                     {
 
-                        Console.WriteLine("Please enter the correct whole number choice you would like to select from this menu. Press enter to continue ");
+                        Console.WriteLine("Invalid data press enter to try again");
                         Console.ReadLine();
+                        Console.Clear();
                         PrintMenu();
                     }
                     else if (Menu_option == 1)
@@ -167,29 +155,30 @@ namespace Assignment_cet2007
                         Quit();
                     }
 
-                }
+                    Console.Clear();
+                    PrintMenu();
 
+                }   
                 catch (FormatException e)
                 { 
 
-                    Console.WriteLine(e.ToString() + "Invalid data Press enter to try again");
+                    Console.WriteLine( "Invalid data press enter to try again");
                     
                     Console.ReadLine();
                     Console.Clear();
                     PrintMenu();
 
-                }
-                
-                  
-                
-              
+                } 
             }
 
             ///  these are very basic print satements used to test each aspect works and links up correctly from the menu before any more complex development begins
-
+            /// <summary>
+            ///  This method will print all the objects
+            /// </summary>
             public void ViewAll()
             {
-                Console.WriteLine("View All Devices");
+                StartOption("Below is a list of all the devices currently within this system in the format device name followed by ip address:");
+     
                 int i = 0;
 
                 foreach (Device  device in network)
@@ -197,6 +186,8 @@ namespace Assignment_cet2007
                     i++;
                     Console.WriteLine(i + "." + device.Details());
                 }
+
+                FinishOption();
             }
             public void AddDevice()
             {
@@ -230,18 +221,24 @@ namespace Assignment_cet2007
             {
                 Console.WriteLine("Exit");
             }
-
+            public void StartOption(string message)
+            {
+                Console.Clear();
+                Console.WriteLine(message + Environment.NewLine);
+            }
+            /// <summary>
+            /// responsible for the code to loop back to menu once the user has finished this option.
+            /// </summary>
+            public void FinishOption()
+            {
+                Console.WriteLine(Environment.NewLine +"You have finsished viewing this option press enter to return to the main menu");
+                Console.ReadLine();
+            }
         }
         static void Main(string[] args)
-        {
-
-         
-          
-           Console.Clear();  /// at the minute the program ask for devices to be entered first so once this is done the console is cleared to bring up the menu - this will change once all menu features are implemented the menu/ welcome screen will be the first aspect of the system the user will interact with.
-           
-            Manager manager = new Manager();
-           
-            
+        { 
+           Console.Clear();  
+           Manager manager = new Manager(); /// creates the menu
         }
     }
 }
