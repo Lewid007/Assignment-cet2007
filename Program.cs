@@ -191,7 +191,26 @@ namespace Assignment_cet2007
             }
             public void AddDevice()
             {
-                Console.WriteLine("Add Device to the system");
+                StartOption("Adding a Device to the system");
+
+                Console.WriteLine("Enter The device name");
+                string nameinput =Console.ReadLine();
+
+                Console.WriteLine("Enter The ip address for the device");
+                string ipinput = Console.ReadLine();
+                if (!string.IsNullOrEmpty(nameinput)) 
+                {
+                    Device device = new Device(nameinput, ipinput, 1); /// id set to one for now but this will have to be made unique at some point
+                    network.Add(device);
+                    Console.WriteLine("Device successfully created!");
+                }
+                else
+                {
+                    Console.WriteLine("Please add data to all input fields");
+                    AddDevice();
+                }
+                    /// for sucesfull options play around with colors font size etc-  Console.BackgroundColor = ConsoleColor.Green;
+                    FinishOption();
             }
             public void EditDevice()
             {
