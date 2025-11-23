@@ -73,8 +73,9 @@ namespace Assignment_cet2007
                 network = new List<Device>()
                 { 
                 /// manualy creating some devices  // the format of ipv6 and random numbers still needs to be done
-                    new Device("Printer", "797a:efb2:fd97:368c:e92f:0c7a:d162:8073", 00000001),
+                   new Device("Printer", "797a:efb2:fd97:368c:e92f:0c7a:d162:8073", 00000001),
                     new Device("Laptop", "d421:3ebd:a882:984e:1d7c:8c35:4834:d9f7", 00000002)
+                   
                 };
                 
                 PrintMenu();
@@ -178,14 +179,10 @@ namespace Assignment_cet2007
             public void ViewAll()
             {
                 StartOption("Below is a list of all the devices currently within this system in the format device name followed by ip address:");
-     
-                int i = 0;
+                /// potentially need some error exception for when there is no users in the system
+                ShowDevice(); /// reason this is seperate due to reusing the code just to show devices if view all was called this would print excess info if used in other class
 
-                foreach (Device  device in network)
-                {
-                    i++;
-                    Console.WriteLine(i + "." + device.Details());
-                }
+                
 
                 FinishOption();
             }
@@ -214,8 +211,41 @@ namespace Assignment_cet2007
             }
             public void EditDevice()
             {
-                Console.WriteLine("Edit Device on the system");
-            }
+               StartOption("Edit Device on the system");
+                /// Very basic but does the job - checks to see if any devices are already in the system to edit
+                if (network.Count == 0) 
+                {
+                    Console.WriteLine("You need to add devices to the system before you can edit them");
+                }
+                else
+                {
+                    ShowDevice();
+                    try
+                    {
+                        Console.WriteLine("Enter the index of the device you would like to edit");
+                        int indexSelection = Convert.ToInt32(Console.ReadLine());
+                        indexSelection = indexSelection - 1; /// this is due to options given on screen are 1 ahead meaning selction 1 is actually position 0 etc
+
+                        if (indexSelection >= 0 && indexSelection <= network.Count - 1)
+                        {
+                            Console.WriteLine("you have succesfully chosen a device to edit");
+                            FinishOption();
+                        }
+                        else
+                        {
+                            Console.WriteLine("you need to select a valid option");
+                            Console.WriteLine("try again");
+                            Console.ReadLine();
+                            ShowDevice();
+                        }
+                    }
+
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Something went wrong"); /// catch only works when string is entered not numbers outside the list
+                    }
+                }
+                    
             public void SearchDevice()
             {
                 Console.WriteLine("Search Device on the system");
@@ -252,6 +282,15 @@ namespace Assignment_cet2007
             {
                 Console.WriteLine(Environment.NewLine +"You have finsished viewing this option press enter to return to the main menu");
                 Console.ReadLine();
+            }
+            public void ShowDevice()
+            {
+                int i = 0;
+                foreach (Device device in network)
+                {
+                    i++;
+                    Console.WriteLine(i + "." + device.Details());
+                }
             }
         }
         static void Main(string[] args)
