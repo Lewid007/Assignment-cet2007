@@ -211,9 +211,9 @@ namespace Assignment_cet2007
             }
             public void EditDevice()
             {
-               StartOption("Edit Device on the system");
+                StartOption("Edit Device on the system");
                 /// Very basic but does the job - checks to see if any devices are already in the system to edit
-                if (network.Count == 0) 
+                if (network.Count == 0)
                 {
                     Console.WriteLine("You need to add devices to the system before you can edit them");
                 }
@@ -229,6 +229,23 @@ namespace Assignment_cet2007
                         if (indexSelection >= 0 && indexSelection <= network.Count - 1)
                         {
                             Console.WriteLine("you have succesfully chosen a device to edit");
+
+                            Console.WriteLine("Enter The device name");
+                            string nameinput = Console.ReadLine();
+
+                            Console.WriteLine("Enter The ip address for the device");
+                            string ipinput = Console.ReadLine();
+                            if (!string.IsNullOrEmpty(nameinput))
+                            {
+                                network[indexSelection].Name= nameinput;
+                                network[indexSelection].IpAddress = ipinput;
+                                Console.WriteLine("Device successfully updated!");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Please add data to all input fields");
+                                AddDevice();
+                            }
                             FinishOption();
                         }
                         else
@@ -236,7 +253,7 @@ namespace Assignment_cet2007
                             Console.WriteLine("you need to select a valid option");
                             Console.WriteLine("try again");
                             Console.ReadLine();
-                            ShowDevice();
+                            EditDevice();
                         }
                     }
 
@@ -245,6 +262,7 @@ namespace Assignment_cet2007
                         Console.WriteLine("Something went wrong"); /// catch only works when string is entered not numbers outside the list
                     }
                 }
+            }
                     
             public void SearchDevice()
             {
@@ -292,6 +310,7 @@ namespace Assignment_cet2007
                     Console.WriteLine(i + "." + device.Details());
                 }
             }
+          
         }
         static void Main(string[] args)
         { 
