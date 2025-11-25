@@ -284,23 +284,42 @@ namespace Assignment_cet2007
                 FinishOption();
 
             }
-            public void UpdateStatus()
+            public void UpdateStatus() 
             {
                 Console.WriteLine("Update Device Status");
             }
             public void SortDevice()
             {
-                Console.WriteLine("Sort Device on the system");
+                Console.WriteLine("Sort Device on the system"); /// this will be implemented later once file handling is implemented and there is an abudance of data to sort cause at the minute sorting is poitnless with only 2 permanent devices as all created devices are lost when the console shuts.
             }
             public void RemoveDevice()
             {
-                Console.WriteLine("Remove Device on the system");
+                StartOption("Remove a device from the system");
+                if (network.Count == 0)
+                {
+                    Console.WriteLine("You need to add devices to the system before you can remove them");
+                }
+                else
+                {
+                    Console.WriteLine("Here is a list of all the devices please enter the number corresponding to the device you want to remove" + Environment.NewLine);
+                    ShowDevice();
+
+                    int indexSelection = Convert.ToInt32(Console.ReadLine());
+                    indexSelection = indexSelection - 1; /// this is due to options given on screen are 1 ahead meaning selction 1 is actually position 0 etc
+
+                    if (indexSelection >= 0 && indexSelection <= network.Count - 1)
+                    {
+                        /// needs to link to a list
+                    }
+                    FinishOption();
+
+                }
             }
-            public void ViewHealth()
+            public void ViewHealth() /// implemented once all the file and data handling is done
             {
                 Console.WriteLine("View the health of the system devices");
             }
-            public void Quit()
+            public void Quit() 
             {
                 Console.WriteLine("Exit");
             }
