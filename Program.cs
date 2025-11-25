@@ -266,7 +266,23 @@ namespace Assignment_cet2007
                     
             public void SearchDevice()
             {
-                Console.WriteLine("Search Device on the system");
+                StartOption("Search for a device on the system");
+                /// searching will be by name at this stage but will be updated to include searching by ip
+                Console.WriteLine("Enter the name of the device you would like to search for");
+                string nameinput = Console.ReadLine();
+
+                if (!string.IsNullOrEmpty(nameinput)) /// ensures that something is entered
+                {
+                    for (int i = 0; i < network.Count; i++)
+                    {
+                        if (network[i].Name.ToLower().Equals(nameinput))
+                        {
+                            Console.WriteLine(network[i].Details());
+                        }
+                    }
+                }
+                FinishOption();
+
             }
             public void UpdateStatus()
             {
