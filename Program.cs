@@ -9,6 +9,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Assignment_cet2007
 {
@@ -54,9 +57,12 @@ namespace Assignment_cet2007
             public string Details()
             {
 
-                return Name +" "+ IpAddress ;
+                return Name + " " + IpAddress;
             }
+
         }
+    
+        
 
         /// <summary>
         /// basic management system to allow a choice of feature- not all features implemenented at this stage
@@ -68,6 +74,45 @@ namespace Assignment_cet2007
             /// <summary>
             /// creates and instance of the manager class
             /// </summary>
+            /// 
+            public void FileDevice()
+            {
+                /// serialize the data
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(network, options);
+                File.WriteAllText("SystemDevice.json", json);
+
+
+                /// deserializing the data
+                string jsonData = File.ReadAllText("SystemDevice.json");
+                List<Device> devicelist2 = JsonSerializer.Deserialize<List<Device>>(jsonData);
+                Console.WriteLine("deserialized list of objects");
+                foreach (Device device in devicelist2)
+                    Console.WriteLine(device.Name + " " + device.IpAddress);
+
+                try
+                {
+                    jsonData = File.ReadAllText("SystemDevice.json");
+
+                }
+                catch
+                {
+                    Console.WriteLine("file not found");
+                    File.WriteAllText("student.json", "[]");
+                }
+
+                try
+                {
+                    string data = File.ReadAllText("SystemDevice.json");
+                    var devices = JsonSerializer.Deserialize<List<Device>>(data);
+
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine("malformed Json file:" + ex.Message);
+                    File.WriteAllText("SystemDevice.json", "[]"); ///reset the file
+                }
+            }
             public Manager()
             {
                 network = new List<Device>()
@@ -75,9 +120,12 @@ namespace Assignment_cet2007
                 /// manualy creating some devices  // the format of ipv6 and random numbers still needs to be done
                    new Device("Printer", "797a:efb2:fd97:368c:e92f:0c7a:d162:8073", 00000001),
                     new Device("Laptop", "d421:3ebd:a882:984e:1d7c:8c35:4834:d9f7", 00000002)
+
+
                    
+
                 };
-                
+                FileDevice();
                 PrintMenu();
             }
 
@@ -200,6 +248,7 @@ namespace Assignment_cet2007
                     Device device = new Device(nameinput, ipinput, 1); /// id set to one for now but this will have to be made unique at some point
                     network.Add(device);
                     Console.WriteLine("Device successfully created!");
+                    FileDevice();
                 }
                 else
                 {
@@ -239,7 +288,11 @@ namespace Assignment_cet2007
                             {
                                 network[indexSelection].Name= nameinput;
                                 network[indexSelection].IpAddress = ipinput;
-                                Console.WriteLine("Device successfully updated!");
+                                /// serialize the data
+                                var options = new JsonSerializerOptions { WriteIndented = true };
+                                string json = JsonSerializer.Serialize(network, options);
+                                File.WriteAllText("SystemDevice.json",json);
+                                
                             }
                             else
                             {
@@ -348,8 +401,20 @@ namespace Assignment_cet2007
           
         }
         static void Main(string[] args)
-        { 
-           Console.Clear();  
+        {
+            try
+            {
+                 string jsonData = File.ReadAllText("SystemDevice.json");
+
+            }
+            catch
+            {
+                Console.WriteLine("No SystemDevice file found so it will now be created");
+                File.WriteAllText("SystemDevice.json", "[]");
+            }
+
+            Console.ReadLine();
+            Console.Clear();  
            Manager manager = new Manager(); /// creates the menu
         }
     }
