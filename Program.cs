@@ -274,7 +274,7 @@ namespace Assignment_cet2007
 
                 Console.WriteLine("Enter The ip address for the device");
                 string ipinput = Console.ReadLine();
-                if (!string.IsNullOrEmpty(nameinput) || !string.IsNullOrEmpty(ipinput))
+                if (!string.IsNullOrEmpty(nameinput) && !string.IsNullOrEmpty(ipinput))
                 {
                     Device device = new Device(nameinput, ipinput, 1); /// id set to one for now but this will have to be made unique at some point
                     network.Add(device);
@@ -310,10 +310,10 @@ namespace Assignment_cet2007
                 }
                 catch
                 {
-
+                    FinishOption();
                 }
                 /// for sucesfull options play around with colors font size etc-  Console.BackgroundColor = ConsoleColor.Green;
-                FinishOption();
+                
             }
             public void EditDevice()
             {
@@ -354,7 +354,7 @@ namespace Assignment_cet2007
                                 Console.WriteLine("Please add data to all input fields");
                                 AddDevice();
                             }
-                            FinishOption();
+                            
                         }
                         else
                         {
@@ -368,6 +368,26 @@ namespace Assignment_cet2007
                     catch (Exception)
                     {
                         Console.WriteLine("Something went wrong"); /// catch only works when string is entered not numbers outside the list
+                    }
+                    try
+                    {
+                        Console.WriteLine("Would you like to add another device yes or no");
+                        string repeat = Console.ReadLine();
+                        if (repeat == "yes".ToUpper())
+                        {
+                            EditDevice();
+
+                        }
+
+                        else if (repeat == "no".ToUpper())
+                        {
+                            FinishOption();
+
+                        }
+                    }
+                    catch
+                    {
+                        FinishOption();
                     }
                 }
             }
