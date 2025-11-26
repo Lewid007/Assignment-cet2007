@@ -61,8 +61,34 @@ namespace Assignment_cet2007
             }
 
         }
-    
-        
+
+        public class Logger
+        {
+
+            private static Logger instance;
+            private static string logFile = "Logs.txt";
+
+            private Logger()
+            {
+            }
+            public static Logger GetInstance()
+            {
+                if (instance == null)
+                
+                    instance = new Logger();
+                    return instance;
+                
+                    
+            }
+            public void Log (string message)
+            {
+                string entry = "[Log - " + DateTime.Now.ToString("HH:mm:ss") + "]" + message;
+                Console.WriteLine(entry);
+                File.AppendAllText(logFile, entry + "\n");
+            }
+
+        }
+
 
         /// <summary>
         /// basic management system to allow a choice of feature- not all features implemenented at this stage
@@ -134,6 +160,7 @@ namespace Assignment_cet2007
             /// </summary>
             public void PrintMenu()
             {
+                Logger.GetInstance().Log("Menu Loaded successfully");
                 Console.WriteLine("WELCOME" + Environment.NewLine);
                 /// creating menu using string array to make adding new items easier in the future
                 string[] menuOptions = new string[]
@@ -163,13 +190,16 @@ namespace Assignment_cet2007
                     {
 
                         Console.WriteLine("Invalid data press enter to try again");
+                        Logger.GetInstance().Log("User has entered invalid data for the menu option");
                         Console.ReadLine();
                         Console.Clear();
                         PrintMenu();
                     }
                     else if (Menu_option == 1)
                     {
+                        Logger.GetInstance().Log("User has succesfully choesen to view all devices");
                         ViewAll();
+                        
                     }
                     else  if (Menu_option == 2)
                     {
@@ -229,8 +259,8 @@ namespace Assignment_cet2007
                 StartOption("Below is a list of all the devices currently within this system in the format device name followed by ip address:");
                 /// potentially need some error exception for when there is no users in the system
                 ShowDevice(); /// reason this is seperate due to reusing the code just to show devices if view all was called this would print excess info if used in other class
+                Logger.GetInstance().Log("Device data loaded successfully.");
 
-                
 
                 FinishOption();
             }
@@ -402,20 +432,12 @@ namespace Assignment_cet2007
         }
         static void Main(string[] args)
         {
-            try
-            {
-                 string jsonData = File.ReadAllText("SystemDevice.json");
-
-            }
-            catch
-            {
-                Console.WriteLine("No SystemDevice file found so it will now be created");
-                File.WriteAllText("SystemDevice.json", "[]");
-            }
-
-            Console.ReadLine();
-            Console.Clear();  
+          
+            
+           Console.Clear();  
            Manager manager = new Manager(); /// creates the menu
+           
+
         }
     }
 }
