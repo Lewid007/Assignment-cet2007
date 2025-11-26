@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Diagnostics.Eventing.Reader;
+using System.Runtime.CompilerServices;
 
 namespace Assignment_cet2007
 {
@@ -83,7 +85,7 @@ namespace Assignment_cet2007
             public void Log (string message)
             {
                 string entry = "[Log - " + DateTime.Now.ToString("HH:mm:ss") + "]" + message;
-                Console.WriteLine(entry);
+                Console.WriteLine(entry); /// proves the logger is working 
                 File.AppendAllText(logFile, entry + "\n");
             }
 
@@ -96,6 +98,7 @@ namespace Assignment_cet2007
         class Manager   
         {
             public int Menu_option { get; private set; }
+            private bool r;
             public List<Device> network;
             /// <summary>
             /// creates and instance of the manager class
@@ -112,9 +115,7 @@ namespace Assignment_cet2007
                 /// deserializing the data
                 string jsonData = File.ReadAllText("SystemDevice.json");
                 List<Device> devicelist2 = JsonSerializer.Deserialize<List<Device>>(jsonData);
-                Console.WriteLine("deserialized list of objects");
-                foreach (Device device in devicelist2)
-                    Console.WriteLine(device.Name + " " + device.IpAddress);
+                
 
                 try
                 {
@@ -186,7 +187,7 @@ namespace Assignment_cet2007
                     Console.WriteLine(Environment.NewLine +"Enter your menu option here");
                     int Menu_option = Convert.ToInt32(Console.ReadLine());
 
-                    if (Menu_option < 1 || Menu_option >= menuOptions.Length-1)
+                    if (Menu_option < 1 || Menu_option > menuOptions.Length)
                     {
 
                         Console.WriteLine("Invalid data press enter to try again");
@@ -269,24 +270,50 @@ namespace Assignment_cet2007
                 StartOption("Adding a Device to the system");
 
                 Console.WriteLine("Enter The device name");
-                string nameinput =Console.ReadLine();
+                string nameinput = Console.ReadLine();
 
                 Console.WriteLine("Enter The ip address for the device");
                 string ipinput = Console.ReadLine();
-                if (!string.IsNullOrEmpty(nameinput)) 
+                if (!string.IsNullOrEmpty(nameinput) || !string.IsNullOrEmpty(ipinput))
                 {
                     Device device = new Device(nameinput, ipinput, 1); /// id set to one for now but this will have to be made unique at some point
                     network.Add(device);
+
+                    
+
+
                     Console.WriteLine("Device successfully created!");
                     FileDevice();
+
+
                 }
                 else
                 {
                     Console.WriteLine("Please add data to all input fields");
                     AddDevice();
                 }
-                    /// for sucesfull options play around with colors font size etc-  Console.BackgroundColor = ConsoleColor.Green;
-                    FinishOption();
+                try
+                {
+                    Console.WriteLine("Would you like to add another device yes or no");
+                    string repeat = Console.ReadLine();
+                    if (repeat == "yes".ToUpper())
+                    {
+                        AddDevice();
+                        
+                    }
+
+                    else if (repeat == "no".ToUpper())
+                    {
+                        FinishOption();
+                        
+                    }
+                }
+                catch
+                {
+
+                }
+                /// for sucesfull options play around with colors font size etc-  Console.BackgroundColor = ConsoleColor.Green;
+                FinishOption();
             }
             public void EditDevice()
             {
@@ -318,10 +345,8 @@ namespace Assignment_cet2007
                             {
                                 network[indexSelection].Name= nameinput;
                                 network[indexSelection].IpAddress = ipinput;
-                                /// serialize the data
-                                var options = new JsonSerializerOptions { WriteIndented = true };
-                                string json = JsonSerializer.Serialize(network, options);
-                                File.WriteAllText("SystemDevice.json",json);
+                              
+                                FileDevice();
                                 
                             }
                             else
@@ -369,11 +394,15 @@ namespace Assignment_cet2007
             }
             public void UpdateStatus() 
             {
+                StartOption("");
                 Console.WriteLine("Update Device Status");
+                FinishOption();
             }
             public void SortDevice()
             {
+                StartOption("");
                 Console.WriteLine("Sort Device on the system"); /// this will be implemented later once file handling is implemented and there is an abudance of data to sort cause at the minute sorting is poitnless with only 2 permanent devices as all created devices are lost when the console shuts.
+                FinishOption();
             }
             public void RemoveDevice()
             {
@@ -399,12 +428,18 @@ namespace Assignment_cet2007
                 }
             }
             public void ViewHealth() /// implemented once all the file and data handling is done
+
             {
+                StartOption("");
+
                 Console.WriteLine("View the health of the system devices");
+                FinishOption();
             }
             public void Quit() 
             {
+                StartOption("");
                 Console.WriteLine("Exit");
+                FinishOption();
             }
             public void StartOption(string message)
             {
@@ -416,7 +451,7 @@ namespace Assignment_cet2007
             /// </summary>
             public void FinishOption()
             {
-                Console.WriteLine(Environment.NewLine +"You have finsished viewing this option press enter to return to the main menu");
+                Console.WriteLine(Environment.NewLine +"You have finsished viewing this option press any key to return to the main menu");
                 Console.ReadLine();
             }
             public void ShowDevice()
@@ -426,6 +461,15 @@ namespace Assignment_cet2007
                 {
                     i++;
                     Console.WriteLine(i + "." + device.Details());
+                }
+            }
+            public void multiple(string message)
+            {
+                Console.WriteLine(message);
+                string repeat =Console.ReadLine();
+                if (repeat == "yes".ToUpper());
+                {
+
                 }
             }
           
