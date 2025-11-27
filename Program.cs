@@ -22,7 +22,13 @@ namespace Assignment_cet2007
         /// <summary>
         /// represents the device class used to link together the main attributes for devices
         /// </summary>
-        class Device
+        
+        public interface IComaprable
+        {
+            int CompareTo(object obj);
+        }
+        
+        class Device: IComparable<Device>
         {
             public string Name { get; set; }
             public int IdUnique { get; set; }
@@ -34,6 +40,10 @@ namespace Assignment_cet2007
             /// <param name="name"></param>
             /// <param name="ipaddress"></param>
             /// <param name="idunique"></param>
+            public int CompareTo(Device other)
+            {
+                return Name.CompareTo(other.Name);
+            }
             public Device(string name, string ipaddress, int idunique)
             {
                 this.Name = name;
@@ -98,7 +108,7 @@ namespace Assignment_cet2007
         class Manager   
         {
             public int Menu_option { get; private set; }
-            private bool r;
+           
             public List<Device> network;
             /// <summary>
             /// creates and instance of the manager class
@@ -146,10 +156,11 @@ namespace Assignment_cet2007
                 { 
                 /// manualy creating some devices  // the format of ipv6 and random numbers still needs to be done
                    new Device("Printer", "797a:efb2:fd97:368c:e92f:0c7a:d162:8073", 00000001),
-                    new Device("Laptop", "d421:3ebd:a882:984e:1d7c:8c35:4834:d9f7", 00000002)
+                    new Device("Laptop", "d421:3ebd:a882:984e:1d7c:8c35:4834:d9f7", 00000002),
+                    new Device("Usb", "797a:efb2:fd97:d162:8073", 00000001),
+                    new Device("Mouse", "d421:3ebd:8c35:4834:d9f7", 00000002)
 
 
-                   
 
                 };
                 FileDevice();
@@ -267,6 +278,7 @@ namespace Assignment_cet2007
             }
             public void AddDevice()
             {
+                Logger.GetInstance().Log("User has successfully chosen to add a device");
                 StartOption("Adding a Device to the system");
 
                 Console.WriteLine("Enter The device name");
@@ -283,35 +295,47 @@ namespace Assignment_cet2007
 
 
                     Console.WriteLine("Device successfully created!");
+                    Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
                     FileDevice();
+                    
+                    try
+                    {
+                        Console.WriteLine("Would you like to add another device yes or no");
+                        string repeat = Console.ReadLine().Trim().ToUpper();  /// converts to upper case and removes any extra spaces
+                        if (repeat == "yes".ToUpper())
+                        {
+                            AddDevice();
 
+                        }
+
+                        else if (repeat == "no".ToUpper())
+                        {
+                            FinishOption();
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("inconsistent data has been entered therefore it is assumed that");
+                            FinishOption();
+                        }
+                    }
+                    catch
+                    {
+                        FinishOption();
+                    }
 
                 }
                 else
                 {
-                    Console.WriteLine("Please add data to all input fields");
+                    Console.WriteLine("Please add data to all input fields press enter to try again");
+                    Console.ReadLine();
                     AddDevice();
                 }
-                try
-                {
-                    Console.WriteLine("Would you like to add another device yes or no");
-                    string repeat = Console.ReadLine();
-                    if (repeat == "yes".ToUpper())
-                    {
-                        AddDevice();
-                        
-                    }
+                
+                
+                    
+                
 
-                    else if (repeat == "no".ToUpper())
-                    {
-                        FinishOption();
-                        
-                    }
-                }
-                catch
-                {
-                    FinishOption();
-                }
                 /// for sucesfull options play around with colors font size etc-  Console.BackgroundColor = ConsoleColor.Green;
                 
             }
@@ -352,7 +376,7 @@ namespace Assignment_cet2007
                             else
                             {
                                 Console.WriteLine("Please add data to all input fields");
-                                AddDevice();
+                                EditDevice();
                             }
                             
                         }
@@ -367,12 +391,14 @@ namespace Assignment_cet2007
 
                     catch (Exception)
                     {
-                        Console.WriteLine("Something went wrong"); /// catch only works when string is entered not numbers outside the list
+                        Console.WriteLine("Something went wrong try again");
+                        Console.ReadLine();
+                        EditDevice();/// catch only works when string is entered not numbers outside the list
                     }
                     try
                     {
                         Console.WriteLine("Would you like to add another device yes or no");
-                        string repeat = Console.ReadLine();
+                        string repeat = Console.ReadLine().Trim().ToUpper();  /// converts to upper case and removes any extra spaces
                         if (repeat == "yes".ToUpper())
                         {
                             EditDevice();
@@ -383,6 +409,11 @@ namespace Assignment_cet2007
                         {
                             FinishOption();
 
+                        }
+                        else
+                        {
+                            Console.WriteLine("inconsistent data has been entered therefore it is assumed that");
+                            FinishOption();
                         }
                     }
                     catch
@@ -420,8 +451,15 @@ namespace Assignment_cet2007
             }
             public void SortDevice()
             {
-                StartOption("");
-                Console.WriteLine("Sort Device on the system"); /// this will be implemented later once file handling is implemented and there is an abudance of data to sort cause at the minute sorting is poitnless with only 2 permanent devices as all created devices are lost when the console shuts.
+                StartOption("Sorting Device on the system");
+               
+                ShowDevice();
+                Console.WriteLine(Environment.NewLine +"devices can only be sorted into alphabetical order based on the name");
+                network.Sort(); ///uses compare to automatically
+                foreach (Device device in network)
+                {
+                    Console.WriteLine(device.Name);
+                }
                 FinishOption();
             }
             public void RemoveDevice()
@@ -450,7 +488,8 @@ namespace Assignment_cet2007
             public void ViewHealth() /// implemented once all the file and data handling is done
 
             {
-                StartOption("");
+                StartOption(""); 
+                //// this will show the log files and json files etc
 
                 Console.WriteLine("View the health of the system devices");
                 FinishOption();
@@ -483,15 +522,8 @@ namespace Assignment_cet2007
                     Console.WriteLine(i + "." + device.Details());
                 }
             }
-            public void multiple(string message)
-            {
-                Console.WriteLine(message);
-                string repeat =Console.ReadLine();
-                if (repeat == "yes".ToUpper());
-                {
-
-                }
-            }
+           
+            
           
         }
         static void Main(string[] args)
