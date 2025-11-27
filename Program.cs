@@ -23,6 +23,7 @@ namespace Assignment_cet2007
         /// represents the device class used to link together the main attributes for devices
         /// </summary>
         
+      
         public interface IComaprable
         {
             int CompareTo(object obj);
@@ -157,8 +158,8 @@ namespace Assignment_cet2007
                 /// manualy creating some devices  // the format of ipv6 and random numbers still needs to be done
                    new Device("Printer", "797a:efb2:fd97:368c:e92f:0c7a:d162:8073", 00000001),
                     new Device("Laptop", "d421:3ebd:a882:984e:1d7c:8c35:4834:d9f7", 00000002),
-                    new Device("Usb", "797a:efb2:fd97:d162:8073", 00000001),
-                    new Device("Mouse", "d421:3ebd:8c35:4834:d9f7", 00000002)
+                    new Device("Usb", "797a:efb2:fd97:d162:8073", 00000003),
+                    new Device("Mouse", "d421:3ebd:8c35:4834:d9f7", 00000004)
 
 
 
@@ -488,17 +489,15 @@ namespace Assignment_cet2007
             public void ViewHealth() /// implemented once all the file and data handling is done
 
             {
-                StartOption(""); 
+                StartOption("");
                 //// this will show the log files and json files etc
-
+                loadfile("SystemDevice.json");
                 Console.WriteLine("View the health of the system devices");
                 FinishOption();
             }
             public void Quit() 
             {
-                StartOption("");
-                Console.WriteLine("Exit");
-                FinishOption();
+                Environment.Exit(0); /// sorta works for now
             }
             public void StartOption(string message)
             {
@@ -524,7 +523,22 @@ namespace Assignment_cet2007
             }
            
             
-          
+          public void loadfile(string message)
+            {
+                try
+                {
+                    using (StreamReader reader = new StreamReader(message))
+                    {
+                        string text = reader.ReadToEnd();
+                        Console.WriteLine(text);
+                    }
+                }
+                catch (IOException e)
+                {
+                    Console.WriteLine("File could not be read");
+                    Console.WriteLine(e.Message);
+                }
+            }
         }
         static void Main(string[] args)
         {
