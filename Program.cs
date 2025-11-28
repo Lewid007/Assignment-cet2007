@@ -74,7 +74,21 @@ namespace Assignment_cet2007
             }
 
         }
-
+        /// <summary>
+        ///  class responsible for showing the status of devices
+        /// </summary>
+        class Status : Device
+        {
+            public string DeviceStatus { get; private set; }
+            public Status(string deviceStatus, string name, string ipaddress, int idunique) : base(name, ipaddress, idunique)
+            {
+                DeviceStatus = deviceStatus;
+            }
+            public string showstatus()
+            {
+                return DeviceStatus;
+            }
+        }
         public class Logger
         {
 
@@ -448,6 +462,7 @@ namespace Assignment_cet2007
             {
                 StartOption("");
                 Console.WriteLine("Update Device Status");
+                
                 FinishOption();
             }
             public void SortDevice()
