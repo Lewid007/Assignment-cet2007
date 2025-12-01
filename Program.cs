@@ -29,7 +29,7 @@ namespace Assignment_cet2007
             int CompareTo(object obj);
         }
         
-        class Device: IComparable<Device>
+        public class Device: IComparable<Device>
         {
             public string Name { get; set; }
             public int IdUnique { get; set; }
@@ -72,17 +72,22 @@ namespace Assignment_cet2007
 
                 return Name + " " + IpAddress;
             }
+           
 
         }
         /// <summary>
         ///  class responsible for showing the status of devices
         /// </summary>
-        class Status : Device
+        public class Status : Device
         {
             public string DeviceStatus { get; private set; }
             public Status(string deviceStatus, string name, string ipaddress, int idunique) : base(name, ipaddress, idunique)
             {
                 DeviceStatus = deviceStatus;
+            }
+            public void setStatus(string deviceStatus)
+            {
+                this.DeviceStatus = deviceStatus;
             }
             public string showstatus()
             {
@@ -123,7 +128,7 @@ namespace Assignment_cet2007
         class Manager   
         {
             public int Menu_option { get; private set; }
-           
+           public int num {  get; private set; }    
             public List<Device> network;
             /// <summary>
             /// creates and instance of the manager class
@@ -301,9 +306,12 @@ namespace Assignment_cet2007
 
                 Console.WriteLine("Enter The ip address for the device");
                 string ipinput = Console.ReadLine();
+                num  = 0;
+
                 if (!string.IsNullOrEmpty(nameinput) && !string.IsNullOrEmpty(ipinput))
                 {
-                    Device device = new Device(nameinput, ipinput, 1); /// id set to one for now but this will have to be made unique at some point
+                    num = num + 1;
+                    Device device = new Device(nameinput, ipinput, num); /// id set to one for now but this will have to be made unique at some point
                     network.Add(device);
 
                     
@@ -462,7 +470,13 @@ namespace Assignment_cet2007
             {
                 StartOption("");
                 Console.WriteLine("Update Device Status");
-                
+                Device d = network[1];
+                Status dstatus = d as Status;
+                if (dstatus != null)
+                {
+                    Console.WriteLine();
+                }
+               
                 FinishOption();
             }
             public void SortDevice()
@@ -495,7 +509,8 @@ namespace Assignment_cet2007
 
                     if (indexSelection >= 0 && indexSelection <= network.Count - 1)
                     {
-                        /// needs to link to a list
+                        Logger.GetInstance().Log("User has successfully chosen to remove a device ");
+                        network.RemoveAt(indexSelection);
                     }
                     FinishOption();
 
@@ -512,6 +527,7 @@ namespace Assignment_cet2007
             }
             public void Quit() 
             {
+                Logger.GetInstance().Log("User has successfully chosen to quit the system");
                 Environment.Exit(0); /// sorta works for now
             }
             public void StartOption(string message)
@@ -538,10 +554,12 @@ namespace Assignment_cet2007
             }
            
             
-          public void loadfile(string message)
+            public void loadfile(string message)
             {
+                
                 try
                 {
+                    deserialize();
                     using (StreamReader reader = new StreamReader(message))
                     {
                         string text = reader.ReadToEnd();
@@ -553,6 +571,12 @@ namespace Assignment_cet2007
                     Console.WriteLine("File could not be read");
                     Console.WriteLine(e.Message);
                 }
+            }
+            public void deserialize()
+            {
+                /// deserializing the data
+                string jsonData = File.ReadAllText("SystemDevice.json");
+                List<Device> devicelist2 = JsonSerializer.Deserialize<List<Device>>(jsonData);
             }
         }
         static void Main(string[] args)
