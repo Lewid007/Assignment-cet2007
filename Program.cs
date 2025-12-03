@@ -14,21 +14,24 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Diagnostics.Eventing.Reader;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Data;
 
 namespace Assignment_cet2007
 {
+    ///  play around with colors font size etc-  Console.BackgroundColor = ConsoleColor.Green;
     internal class Program
     {
         /// <summary>
-        /// represents the device class used to link together the main attributes for devices
+        /// This interface is used for implementing the search algorithm 
         /// </summary>
-        
-      
         public interface IComaprable
         {
             int CompareTo(object obj);
         }
-        
+        /// <summary>
+        /// The Device class allows objects to be made within the system and it inherits from the status class aswell as two interfaces to allow for searching of devices and implementing the status of devices.
+        /// </summary>
         public class Device : Status ,IComparable<Device>,Istate<Device>
         {
             public string Name { get; set; }
@@ -36,16 +39,14 @@ namespace Assignment_cet2007
             public string IpAddress { get; set; }
         
 
-            /// <summary>
-            /// Creating an instance of the device class
-            /// </summary>
-            /// <param name="name"></param>
-            /// <param name="ipaddress"></param>
-            /// <param name="idunique"></param>
+         
             public int CompareTo(Device other)
             {
                 return Name.CompareTo(other.Name);
             }
+            /// <summary>
+            /// Creating an instance of the device class
+            /// </summary>
             public Device(string name, string ipaddress, int idunique, string devicestatus) : base(devicestatus)
             {
                 this.Name = name;
@@ -83,14 +84,16 @@ namespace Assignment_cet2007
 
         }
         /// <summary>
-        ///  class responsible for showing the status of devices
+        /// Interace which is responsible for linking together the feature to show the status of any device in the list
         /// </summary>
         
-
         interface Istate<Device>
         {
             void ShowStatus();
         }
+        /// <summary>
+        ///  This Class is responsible for showing the status of devices. It is the parent class as all devices must have a status
+        /// </summary>
         public class Status   
         {
             public string DeviceStatus { get;  set; }
@@ -113,6 +116,9 @@ namespace Assignment_cet2007
             }
             
         }
+        /// <summary>
+        ///  This class is for auditing purposes and contains everything to do with the log aspect of the system
+        /// </summary>
         public class Logger
         {
 
@@ -131,10 +137,14 @@ namespace Assignment_cet2007
                 
                     
             }
+            /// <summary>
+            /// This method is responsible for creating a log and adding it to a text file.
+            /// </summary>
+            
             public void Log (string message)
             {
                 string entry = "[Log - " + DateTime.Now.ToString("HH:mm:ss") + "]" + message;
-                Console.WriteLine(entry); /// proves the logger is working 
+                
                 File.AppendAllText(logFile, entry + "\n");
             }
 
@@ -142,14 +152,14 @@ namespace Assignment_cet2007
 
 
         /// <summary>
-        /// basic management system to allow a choice of feature- not all features implemenented at this stage
+        /// basic management system to allow a choice of feature
         /// </summary>
-        class Manager   
+        class Manager
         {
             public int Menu_option { get; private set; }
-           public int num {  get; private set; }    
+            public int num { get; private set; }
             public List<Device> network;
-            
+
             /// <summary>
             /// creates and instance of the manager class
             /// </summary>
@@ -165,7 +175,7 @@ namespace Assignment_cet2007
                 /// deserializing the data
                 string jsonData = File.ReadAllText("SystemDevice.json");
                 List<Device> devicelist2 = JsonSerializer.Deserialize<List<Device>>(jsonData);
-                
+
 
                 try
                 {
@@ -199,13 +209,13 @@ namespace Assignment_cet2007
                     new Device("Laptop", "d421:3ebd:a882:984e:1d7c:8c35:4834:d9f7", 00000002, "online"),
                     new Device("Usb", "797a:efb2:fd97:d162:8073", 00000003, "online"),
                     new Device("Mouse", "d421:3ebd:8c35:4834:d9f7", 00000004 ,"online"),
-                    
+
 
 
                 };
                 FileDevice();
                 PrintMenu();
-                
+
             }
 
             /// <summary>
@@ -231,82 +241,91 @@ namespace Assignment_cet2007
                 /// this for loop adds numbers to the menu options
                 for (int i = 0; i < menuOptions.Length; i++)
                 {
-                    Console.WriteLine(i+1 +"."+ menuOptions[i]);
+                    Console.WriteLine(i + 1 + "." + menuOptions[i]);
                 }
-                
+
                 try
                 {
-                    Console.WriteLine(Environment.NewLine +"Enter your menu option here");
+                    Console.WriteLine(Environment.NewLine + "Enter your menu option here");
                     int Menu_option = Convert.ToInt32(Console.ReadLine());
 
                     if (Menu_option < 1 || Menu_option > menuOptions.Length)
                     {
 
-                        Console.WriteLine("Invalid data press enter to try again");
+                        InvalidData();
                         Logger.GetInstance().Log("User has entered invalid data for the menu option");
-                        Console.ReadLine();
-                        Console.Clear();
+                        
+                       
                         PrintMenu();
                     }
                     else if (Menu_option == 1)
                     {
                         Logger.GetInstance().Log("User has succesfully choesen to view all devices");
                         ViewAll();
-                        
+
                     }
-                    else  if (Menu_option == 2)
+                    else if (Menu_option == 2)
                     {
+                        Logger.GetInstance().Log("User has succesfully chosen to add a new device to the sytem");
                         AddDevice();
                     }
                     else if (Menu_option == 3)
                     {
-                        EditDevice();
+                       Logger.GetInstance().Log("User has succesfully chosen to edit a device on the system");
+                       EditDevice();
                     }
                     else if (Menu_option == 4)
                     {
+                        Logger.GetInstance().Log("User has succesfully chosen to Search for a device on the system");
                         SearchDevice();
                     }
                     else if (Menu_option == 5)
                     {
+                        Logger.GetInstance().Log("User has succesfully chosen to update the device status on the system");
                         UpdateStatus();
                     }
                     else if (Menu_option == 6)
                     {
+                        Logger.GetInstance().Log("User has succesfully chosen to sort the devices on the system");
                         SortDevice();
                     }
                     else if (Menu_option == 7)
                     {
+                        Logger.GetInstance().Log("User has succesfully chosen to remove a device on the system");
                         RemoveDevice();
                     }
                     else if (Menu_option == 8)
                     {
+                        Logger.GetInstance().Log("User has succesfully chosen to view the sytstem health");
                         ViewHealth();
                     }
                     else if (Menu_option == 9)
                     {
+                        Logger.GetInstance().Log("User has succesfully chosen to quit the system");
                         Quit();
                     }
 
                     Console.Clear();
                     PrintMenu();
 
-                }   
+                }
                 catch (FormatException e)
-                { 
+                {
 
-                    Console.WriteLine( "Invalid data press enter to try again");
-                    
-                    Console.ReadLine();
-                    Console.Clear();
+                    InvalidData();
                     PrintMenu();
 
-                } 
+                }
             }
+
 
             ///  these are very basic print satements used to test each aspect works and links up correctly from the menu before any more complex development begins
             /// <summary>
             ///  This method will print all the objects
             /// </summary>
+
+
+            
             public void ViewAll()
             {
                 StartOption("Below is a list of all the devices currently within this system in the format device name followed by ip address:");
@@ -327,41 +346,27 @@ namespace Assignment_cet2007
 
                 Console.WriteLine("Enter The ip address for the device");
                 string ipinput = Console.ReadLine();
-                num  = 0;
+                num = 0;
 
                 if (!string.IsNullOrEmpty(nameinput) && !string.IsNullOrEmpty(ipinput))
                 {
                     num = num + 1;
-                    Device device = new Device(nameinput, ipinput, num,"online"); /// id set to one for now but this will have to be made unique at some point
+                    Device device = new Device(nameinput, ipinput, num, "online"); /// id set to one for now but this will have to be made unique at some point
                     network.Add(device);
-
-                    
-
-
                     Console.WriteLine("Device successfully created!");
                     Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
                     FileDevice();
-                    
+
                     try
                     {
-                        Console.WriteLine("Would you like to add another device yes or no");
+                        Console.WriteLine("Would you like to add another device");
                         string repeat = Console.ReadLine().Trim().ToUpper();  /// converts to upper case and removes any extra spaces
                         if (repeat == "yes".ToUpper())
                         {
                             AddDevice();
 
                         }
-
-                        else if (repeat == "no".ToUpper())
-                        {
-                            FinishOption();
-
-                        }
-                        else
-                        {
-                            Console.WriteLine("inconsistent data has been entered therefore it is assumed that");
-                            FinishOption();
-                        }
+                        FinishOption();
                     }
                     catch
                     {
@@ -371,17 +376,16 @@ namespace Assignment_cet2007
                 }
                 else
                 {
-                    Console.WriteLine("Please add data to all input fields press enter to try again");
-                    Console.ReadLine();
+                    InvalidData();
                     AddDevice();
                 }
-                
-                
-                    
+
+
+
+
+
                 
 
-                /// for sucesfull options play around with colors font size etc-  Console.BackgroundColor = ConsoleColor.Green;
-                
             }
             public void EditDevice()
             {
@@ -411,18 +415,18 @@ namespace Assignment_cet2007
                             string ipinput = Console.ReadLine();
                             if (!string.IsNullOrEmpty(nameinput))
                             {
-                                network[indexSelection].Name= nameinput;
+                                network[indexSelection].Name = nameinput;
                                 network[indexSelection].IpAddress = ipinput;
-                              
+
                                 FileDevice();
-                                
+
                             }
                             else
                             {
                                 Console.WriteLine("Please add data to all input fields");
                                 EditDevice();
                             }
-                            
+
                         }
                         else
                         {
@@ -441,23 +445,12 @@ namespace Assignment_cet2007
                     }
                     try
                     {
-                        Console.WriteLine("Would you like to add another device yes or no");
+                        Console.WriteLine("Would you like to edit another device yes or no");
                         string repeat = Console.ReadLine().Trim().ToUpper();  /// converts to upper case and removes any extra spaces
                         if (repeat == "yes".ToUpper())
                         {
                             EditDevice();
 
-                        }
-
-                        else if (repeat == "no".ToUpper())
-                        {
-                            FinishOption();
-
-                        }
-                        else
-                        {
-                            Console.WriteLine("inconsistent data has been entered therefore it is assumed that");
-                            FinishOption();
                         }
                     }
                     catch
@@ -484,11 +477,11 @@ namespace Assignment_cet2007
                             Console.WriteLine(network[i].Details());
                             bfound = true;
                         }
-                        
+
                     }
                     if (!bfound)
                     {
-                        Console.WriteLine("No Devices with that name"); 
+                        Console.WriteLine("No Devices with that name");
                     }
                     else
                     {
@@ -499,7 +492,7 @@ namespace Assignment_cet2007
                 {
                     SearchDevice();
                 }
-                    FinishOption();
+                FinishOption();
 
             }
             public void UpdateStatus() ///status is seperate list due to security reas
@@ -517,7 +510,7 @@ namespace Assignment_cet2007
 
                 Device d = network[1];
                 Status dstatus = d as Status;
-              
+
                 dstatus.ShowStatus();
                 FinishOption();
             }
@@ -530,7 +523,7 @@ namespace Assignment_cet2007
                 network.Sort(); ///uses compare to automatically
                 foreach (Device device in network)
                 {
-                    
+
                     Console.WriteLine(device.Name);
                 }
                 FinishOption();
@@ -569,7 +562,7 @@ namespace Assignment_cet2007
                 Console.WriteLine("View the health of the system devices");
                 FinishOption();
             }
-            public void Quit() 
+            public void Quit()
             {
                 Logger.GetInstance().Log("User has successfully chosen to quit the system");
                 Environment.Exit(0); /// sorta works for now
@@ -584,7 +577,7 @@ namespace Assignment_cet2007
             /// </summary>
             public void FinishOption()
             {
-                Console.WriteLine(Environment.NewLine +"You have finsished this option press enter to return to the main menu");
+                Console.WriteLine(Environment.NewLine + "Press enter to return to the main menu");
                 Console.ReadLine();
             }
             public void ShowDevice()
@@ -596,17 +589,18 @@ namespace Assignment_cet2007
                     Console.WriteLine(i + ". " + device.Details());
                 }
             }
-           
-            
+
+
             public void loadfile(string message)
             {
-                
+
                 try
                 {
                     deserialize();
                     using (StreamReader reader = new StreamReader(message))
                     {
                         string text = reader.ReadToEnd();
+                        deserialize();
                         Console.WriteLine(text);
                     }
                 }
@@ -622,14 +616,22 @@ namespace Assignment_cet2007
                 string jsonData = File.ReadAllText("SystemDevice.json");
                 List<Device> devicelist2 = JsonSerializer.Deserialize<List<Device>>(jsonData);
             }
+            public void InvalidData()
+            {
+                Console.WriteLine("Invalid data press enter to try again");  
+                Console.ReadLine();
+                Console.Clear();
+            }
+            
         }
         static void Main(string[] args)
         {
           
             
            Console.Clear();  
-           Manager manager = new Manager(); /// creates the menu
-           
+           Manager manager = new Manager();
+            /// creates the menu
+
 
         }
     }
