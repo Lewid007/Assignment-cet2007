@@ -29,11 +29,12 @@ namespace Assignment_cet2007
             int CompareTo(object obj);
         }
         
-        public class Device: IComparable<Device>
+        public class Device : Status ,IComparable<Device>,Istate<Device>
         {
             public string Name { get; set; }
             public int IdUnique { get; set; }
             public string IpAddress { get; set; }
+        
 
             /// <summary>
             /// Creating an instance of the device class
@@ -45,12 +46,18 @@ namespace Assignment_cet2007
             {
                 return Name.CompareTo(other.Name);
             }
-            public Device(string name, string ipaddress, int idunique)
+            public Device(string name, string ipaddress, int idunique, string devicestatus) : base(devicestatus)
             {
                 this.Name = name;
                 this.IpAddress = ipaddress;
                 this.IdUnique = idunique;
+                this.DeviceStatus = devicestatus;
             }
+
+            /// used for the status
+            /// 
+         
+
             public void setName(string Name)
             {
                 this.Name = Name;
@@ -59,7 +66,7 @@ namespace Assignment_cet2007
             {
                 this.IpAddress = IpAddress;
             }
-            public void setIDUnique(string IpUnique)  //// this will be kept at 8 digits starting at 00000001 and will be hidden from the user as it is irelavant as the main purpose is to prevent duplicate items
+            public void setIDUnique(string IpUnique)  
             {
                 this.IpAddress = IpUnique;
             }
@@ -78,21 +85,33 @@ namespace Assignment_cet2007
         /// <summary>
         ///  class responsible for showing the status of devices
         /// </summary>
-        public class Status : Device
+        
+
+        interface Istate<Device>
         {
-            public string DeviceStatus { get; private set; }
-            public Status(string deviceStatus, string name, string ipaddress, int idunique) : base(name, ipaddress, idunique)
+            void ShowStatus();
+        }
+        public class Status   
+        {
+            public string DeviceStatus { get;  set; }
+            
+
+            public Status( string deviceStatus)
             {
                 DeviceStatus = deviceStatus;
             }
+
+           
+
             public void setStatus(string deviceStatus)
             {
                 this.DeviceStatus = deviceStatus;
             }
-            public string showstatus()
+            public void ShowStatus()
             {
-                return DeviceStatus;
+                Console.WriteLine(DeviceStatus + "hello");
             }
+            
         }
         public class Logger
         {
@@ -130,6 +149,7 @@ namespace Assignment_cet2007
             public int Menu_option { get; private set; }
            public int num {  get; private set; }    
             public List<Device> network;
+            
             /// <summary>
             /// creates and instance of the manager class
             /// </summary>
@@ -175,16 +195,17 @@ namespace Assignment_cet2007
                 network = new List<Device>()
                 { 
                 /// manualy creating some devices  // the format of ipv6 and random numbers still needs to be done
-                   new Device("Printer", "797a:efb2:fd97:368c:e92f:0c7a:d162:8073", 00000001),
-                    new Device("Laptop", "d421:3ebd:a882:984e:1d7c:8c35:4834:d9f7", 00000002),
-                    new Device("Usb", "797a:efb2:fd97:d162:8073", 00000003),
-                    new Device("Mouse", "d421:3ebd:8c35:4834:d9f7", 00000004)
-
+                   new Device("Printer", "797a:efb2:fd97:368c:e92f:0c7a:d162:8073", 00000001,"online"),
+                    new Device("Laptop", "d421:3ebd:a882:984e:1d7c:8c35:4834:d9f7", 00000002, "online"),
+                    new Device("Usb", "797a:efb2:fd97:d162:8073", 00000003, "online"),
+                    new Device("Mouse", "d421:3ebd:8c35:4834:d9f7", 00000004 ,"online"),
+                    
 
 
                 };
                 FileDevice();
                 PrintMenu();
+                
             }
 
             /// <summary>
@@ -311,7 +332,7 @@ namespace Assignment_cet2007
                 if (!string.IsNullOrEmpty(nameinput) && !string.IsNullOrEmpty(ipinput))
                 {
                     num = num + 1;
-                    Device device = new Device(nameinput, ipinput, num); /// id set to one for now but this will have to be made unique at some point
+                    Device device = new Device(nameinput, ipinput, num,"online"); /// id set to one for now but this will have to be made unique at some point
                     network.Add(device);
 
                     
@@ -445,13 +466,14 @@ namespace Assignment_cet2007
                     }
                 }
             }
-                    
+
             public void SearchDevice()
             {
                 StartOption("Search for a device on the system");
                 /// searching will be by name at this stage but will be updated to include searching by ip
                 Console.WriteLine("Enter the name of the device you would like to search for");
                 string nameinput = Console.ReadLine();
+                bool bfound = false;
 
                 if (!string.IsNullOrEmpty(nameinput)) /// ensures that something is entered
                 {
@@ -460,34 +482,55 @@ namespace Assignment_cet2007
                         if (network[i].Name.ToLower().Equals(nameinput))
                         {
                             Console.WriteLine(network[i].Details());
+                            bfound = true;
                         }
+                        
+                    }
+                    if (!bfound)
+                    {
+                        Console.WriteLine("No Devices with that name"); 
+                    }
+                    else
+                    {
+
                     }
                 }
-                FinishOption();
+                else
+                {
+                    SearchDevice();
+                }
+                    FinishOption();
 
             }
-            public void UpdateStatus() 
+            public void UpdateStatus() ///status is seperate list due to security reas
             {
                 StartOption("");
                 Console.WriteLine("Update Device Status");
+                ShowDevice();
+                Console.WriteLine("Enter the index of the device you would like to update the status");
+                int indexSelection = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Enter the status");
+                string statusinput = Console.ReadLine();
+                indexSelection = indexSelection - 1;
+                network[indexSelection].DeviceStatus = statusinput;
+                FileDevice();
+
                 Device d = network[1];
                 Status dstatus = d as Status;
-                if (dstatus != null)
-                {
-                    Console.WriteLine();
-                }
-               
+              
+                dstatus.ShowStatus();
                 FinishOption();
             }
             public void SortDevice()
             {
                 StartOption("Sorting Device on the system");
-               
-                ShowDevice();
-                Console.WriteLine(Environment.NewLine +"devices can only be sorted into alphabetical order based on the name");
+
+                Console.WriteLine("Below is a list of all the devices sorted into aplhabetical order based on the first name of the device." + Environment.NewLine);
+                Logger.GetInstance().Log("User has succesfull sorted chosen to sort the devices into alphabetical order");
                 network.Sort(); ///uses compare to automatically
                 foreach (Device device in network)
                 {
+                    
                     Console.WriteLine(device.Name);
                 }
                 FinishOption();
@@ -515,6 +558,7 @@ namespace Assignment_cet2007
                     FinishOption();
 
                 }
+                FinishOption();
             }
             public void ViewHealth() /// implemented once all the file and data handling is done
 
@@ -540,7 +584,7 @@ namespace Assignment_cet2007
             /// </summary>
             public void FinishOption()
             {
-                Console.WriteLine(Environment.NewLine +"You have finsished viewing this option press any key to return to the main menu");
+                Console.WriteLine(Environment.NewLine +"You have finsished this option press enter to return to the main menu");
                 Console.ReadLine();
             }
             public void ShowDevice()
@@ -549,7 +593,7 @@ namespace Assignment_cet2007
                 foreach (Device device in network)
                 {
                     i++;
-                    Console.WriteLine(i + "." + device.Details());
+                    Console.WriteLine(i + ". " + device.Details());
                 }
             }
            
