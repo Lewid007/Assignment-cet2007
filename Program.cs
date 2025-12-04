@@ -307,8 +307,12 @@ namespace Assignment_cet2007
                         Logger.GetInstance().Log("User has succesfully chosen to quit the system");
                         Quit();
                     }
+                    else
+                    {
+                        throw new ArgumentOutOfRangeException();
+                    }
 
-                    Console.Clear();
+                        Console.Clear();
                     PrintMenu();
 
                 }
