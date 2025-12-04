@@ -16,6 +16,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Data;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Assignment_cet2007
 {
@@ -158,6 +159,8 @@ namespace Assignment_cet2007
         {
             public int Menu_option { get; private set; }
             public int num { get; private set; }
+            public string nameinput { get; set; }
+            string ipinput { get; set; }
             public List<Device> network;
 
             /// <summary>
@@ -225,7 +228,7 @@ namespace Assignment_cet2007
             {
                 Logger.GetInstance().Log("Menu Loaded successfully");
                 Console.WriteLine("WELCOME" + Environment.NewLine);
-                /// creating menu using string array to make adding new items easier in the future
+                /// creating menu using string array to make adding and updating menu choice items easier in the future
                 string[] menuOptions = new string[]
                 {
                     "View All Devices",
@@ -238,12 +241,12 @@ namespace Assignment_cet2007
                     "View System Health",
                     "Exit",
                 };
-                /// this for loop adds numbers to the menu options
+                /// this for loop adds an index number to the menu options
                 for (int i = 0; i < menuOptions.Length; i++)
                 {
                     Console.WriteLine(i + 1 + "." + menuOptions[i]);
                 }
-
+                /// this section of code will link up the menu choice to the corresponding features with appropriate error handling used
                 try
                 {
                     Console.WriteLine(Environment.NewLine + "Enter your menu option here");
@@ -254,8 +257,8 @@ namespace Assignment_cet2007
 
                         InvalidData();
                         Logger.GetInstance().Log("User has entered invalid data for the menu option");
-                        
-                       
+
+
                         PrintMenu();
                     }
                     else if (Menu_option == 1)
@@ -271,8 +274,8 @@ namespace Assignment_cet2007
                     }
                     else if (Menu_option == 3)
                     {
-                       Logger.GetInstance().Log("User has succesfully chosen to edit a device on the system");
-                       EditDevice();
+                        Logger.GetInstance().Log("User has succesfully chosen to edit a device on the system");
+                        EditDevice();
                     }
                     else if (Menu_option == 4)
                     {
@@ -318,14 +321,9 @@ namespace Assignment_cet2007
                 }
             }
 
-
-            ///  these are very basic print satements used to test each aspect works and links up correctly from the menu before any more complex development begins
             /// <summary>
             ///  This method will print all the objects
             /// </summary>
-
-
-            
             public void ViewAll()
             {
                 StartOption("Below is a list of all the devices currently within this system in the format device name followed by ip address:");
@@ -336,134 +334,131 @@ namespace Assignment_cet2007
 
                 FinishOption();
             }
+            /// <summary>
+            /// This method will allow the user to add a device to the system
+            /// </summary>
             public void AddDevice()
             {
                 Logger.GetInstance().Log("User has successfully chosen to add a device");
                 StartOption("Adding a Device to the system");
 
-                Console.WriteLine("Enter The device name");
-                string nameinput = Console.ReadLine();
-
-                Console.WriteLine("Enter The ip address for the device");
-                string ipinput = Console.ReadLine();
-                num = 0;
-
-                if (!string.IsNullOrEmpty(nameinput) && !string.IsNullOrEmpty(ipinput))
+                try
                 {
-                    num = num + 1;
-                    Device device = new Device(nameinput, ipinput, num, "online"); /// id set to one for now but this will have to be made unique at some point
-                    network.Add(device);
-                    Console.WriteLine("Device successfully created!");
-                    Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
-                    FileDevice();
-
-                    try
+                    Device device = SetInfo();
+                    if (device != null)
                     {
-                        Console.WriteLine("Would you like to add another device");
-                        string repeat = Console.ReadLine().Trim().ToUpper();  /// converts to upper case and removes any extra spaces
-                        if (repeat == "yes".ToUpper())
-                        {
-                            AddDevice();
 
-                        }
-                        FinishOption();
+                        network.Add(device);
+                        Console.WriteLine("Device successfully created!");
+                        Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
+                        FileDevice();
                     }
-                    catch
+                    else
                     {
-                        FinishOption();
+                        AddDevice();
                     }
-
                 }
-                else
+                catch
                 {
                     InvalidData();
                     AddDevice();
                 }
 
+                try
+                {
+                    Console.WriteLine("Would you like to add another device");
+                    string repeat = Console.ReadLine().Trim().ToUpper();  /// converts to upper case and removes any extra spaces
+                    if (repeat == "yes".ToUpper())
+                    {
+                        AddDevice();
 
-
-
-
-                
-
+                    }
+                    else
+                    {
+                        FinishOption();
+                    }
+                }
+                catch
+                {
+                    FinishOption();
+                }
             }
             public void EditDevice()
             {
                 StartOption("Edit Device on the system");
                 /// Very basic but does the job - checks to see if any devices are already in the system to edit
-                if (network.Count == 0)
+                checkdevice();
+                
+               
+                ShowDevice();
+
+
+                Console.WriteLine("Enter the index of the device you would like to edit");
+                int indexSelection = Convert.ToInt32(Console.ReadLine());
+                indexSelection = indexSelection - 1; /// this is due to options given on screen are 1 ahead meaning selction 1 is actually position 0 etc
+
+                if (indexSelection >= 0 && indexSelection <= network.Count - 1)
                 {
-                    Console.WriteLine("You need to add devices to the system before you can edit them");
-                }
-                else
-                {
-                    ShowDevice();
+                    Console.WriteLine("you have succesfully chosen a device to edit");
+                    Logger.GetInstance().Log("User has successfully chosen to edit a device");
+
+
                     try
                     {
-                        Console.WriteLine("Enter the index of the device you would like to edit");
-                        int indexSelection = Convert.ToInt32(Console.ReadLine());
-                        indexSelection = indexSelection - 1; /// this is due to options given on screen are 1 ahead meaning selction 1 is actually position 0 etc
-
-                        if (indexSelection >= 0 && indexSelection <= network.Count - 1)
+                        Device device = SetInfo();
+                        if (device != null)
                         {
-                            Console.WriteLine("you have succesfully chosen a device to edit");
+                            network[indexSelection] = device;
 
-                            Console.WriteLine("Enter The device name");
-                            string nameinput = Console.ReadLine();
-
-                            Console.WriteLine("Enter The ip address for the device");
-                            string ipinput = Console.ReadLine();
-                            if (!string.IsNullOrEmpty(nameinput))
-                            {
-                                network[indexSelection].Name = nameinput;
-                                network[indexSelection].IpAddress = ipinput;
-
-                                FileDevice();
-
-                            }
-                            else
-                            {
-                                Console.WriteLine("Please add data to all input fields");
-                                EditDevice();
-                            }
-
+                            Console.WriteLine("Device successfully created!");
+                            // Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
+                            FileDevice();
                         }
                         else
                         {
-                            Console.WriteLine("you need to select a valid option");
-                            Console.WriteLine("try again");
-                            Console.ReadLine();
                             EditDevice();
                         }
+
                     }
 
-                    catch (Exception)
+                    catch
                     {
-                        Console.WriteLine("Something went wrong try again");
-                        Console.ReadLine();
-                        EditDevice();/// catch only works when string is entered not numbers outside the list
+                        InvalidData();
+                        EditDevice();
                     }
                     try
                     {
-                        Console.WriteLine("Would you like to edit another device yes or no");
+                        Console.WriteLine("Would you like to edit another device");
                         string repeat = Console.ReadLine().Trim().ToUpper();  /// converts to upper case and removes any extra spaces
                         if (repeat == "yes".ToUpper())
                         {
                             EditDevice();
 
                         }
+                        else
+                        {
+                            FinishOption();
+                        }
                     }
-                    catch
+                    catch (Exception)
                     {
                         FinishOption();
                     }
                 }
+                else
+                {
+                    Console.WriteLine("You need to select an option within the index range of the devices try again");
+                    EditDevice();
+                }
+                
+                
             }
+
 
             public void SearchDevice()
             {
                 StartOption("Search for a device on the system");
-                /// searching will be by name at this stage but will be updated to include searching by ip
+                checkdevice();
                 Console.WriteLine("Enter the name of the device you would like to search for");
                 string nameinput = Console.ReadLine();
                 bool bfound = false;
@@ -618,11 +613,42 @@ namespace Assignment_cet2007
             }
             public void InvalidData()
             {
-                Console.WriteLine("Invalid data press enter to try again");  
+                Console.WriteLine("Invalid data press enter to try again");
                 Console.ReadLine();
                 Console.Clear();
             }
-            
+            public Device SetInfo()
+            {
+                Console.WriteLine("Enter The device name");
+                string nameinput = Console.ReadLine();
+
+                Console.WriteLine("Enter The ip address for the device");
+                string ipinput = Console.ReadLine();
+                num = 0;
+                if (!string.IsNullOrEmpty(nameinput) && !string.IsNullOrEmpty(ipinput))
+                {
+                    num = num + 1;
+                    /// id set to one for now but this will have to be made unique at some point
+                    return new Device(nameinput, ipinput, num, "offline");
+                }
+                else
+                {
+                    InvalidData();
+
+                }
+                return null;
+            }
+
+            public void checkdevice()
+            {
+            if (network.Count == 0)
+                {
+                    Console.WriteLine("You need to add devices to the system before you can edit them" + Environment.NewLine +  "Press enter to be redirected and add users to the system");
+                    Console.ReadLine();
+                    
+                }
+            }
+
         }
         static void Main(string[] args)
         {
