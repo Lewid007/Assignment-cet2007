@@ -103,6 +103,9 @@ namespace Assignment_cet2007
                 FinishOption();
             }
         }
+        /// <summary>
+        ///  This method will allow users to edit devices
+        /// </summary>
         public void EditDevice()
         {
             StartOption("Edit Device on the system");
@@ -182,7 +185,9 @@ namespace Assignment_cet2007
 
 
         }
-
+        /// <summary>
+        ///  this feature will allow users to search for devices based on the name of device
+        /// </summary>
 
         public void SearchDevice()
         {
@@ -219,6 +224,9 @@ namespace Assignment_cet2007
             FinishOption();
 
         }
+        /// <summary>
+        ///  This method will allow users to update the device status
+        /// </summary>
         public void UpdateStatus() ///status is seperate list due to security reas
         {
             StartOption("");
@@ -238,6 +246,9 @@ namespace Assignment_cet2007
             dstatus.ShowStatus();
             FinishOption();
         }
+        /// <summary>
+        ///  This will allow the user to sort devices
+        /// </summary>
         public void SortDevice()
         {
             StartOption("Sorting Device on the system");
@@ -252,6 +263,9 @@ namespace Assignment_cet2007
             }
             FinishOption();
         }
+        /// <summary>
+        /// This will allow the user to remove devices
+        /// </summary>
         public void RemoveDevice()
         {
             StartOption("Remove a device from the system");
@@ -277,6 +291,9 @@ namespace Assignment_cet2007
             }
             FinishOption();
         }
+        /// <summary>
+        /// This will allow the user to view the health of the system
+        /// </summary>
         public void ViewHealth() /// implemented once all the file and data handling is done
 
         {
@@ -286,6 +303,9 @@ namespace Assignment_cet2007
             Console.WriteLine("View the health of the system devices");
             FinishOption();
         }
+        /// <summary>
+        /// allow the user to exit the system properly.
+        /// </summary>
         public void Quit()
         {
             Logger.GetInstance().Log("User has successfully chosen to quit the system");
