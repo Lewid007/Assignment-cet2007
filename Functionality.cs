@@ -21,17 +21,17 @@ using static Assignment_cet2007.Program;
 
 namespace Assignment_cet2007
 {
-    public class menuFunctionality 
+    class menuFunctionality 
     {
-        List<Device> network;
-        public int num { get; private set; }
+       
+        public  static int num { get; private set; }
         public string nameinput { get; set; }
         string ipinput { get; set; }
 
-        Device device = new Device("","",1,"");
+        
        
        
-        public void ViewAll()
+        public static void ViewAll()
         {
             StartOption("Below is a list of all the devices currently within this system in the format device name followed by ip address:");
             /// potentially need some error exception for when there is no users in the system
@@ -44,7 +44,7 @@ namespace Assignment_cet2007
         /// <summary>
         /// This method will allow the user to add a device to the system
         /// </summary>
-        public void AddDevice()
+        public static void AddDevice()
         {
             Logger.GetInstance().Log("User has successfully chosen to add a device");
             StartOption("Adding a Device to the system");
@@ -64,7 +64,7 @@ namespace Assignment_cet2007
                         num = num + 1;
                         /// id set to one for now but this will have to be made unique at some point
                         Device device = new Device(nameinput, ipinput, num, "offline");
-                        network.Add(device);
+                        Manager.network.Add(device);
                     }
                     else
                     {
@@ -74,7 +74,7 @@ namespace Assignment_cet2007
                     
                     Console.WriteLine("Device successfully created!");
                     Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
-                    FileSystem.FileDevice(network);
+                    FileSystem.FileDevice(Manager.network);
                 
                 
             }
@@ -106,7 +106,7 @@ namespace Assignment_cet2007
         /// <summary>
         ///  This method will allow users to edit devices
         /// </summary>
-        public void EditDevice()
+        public static void EditDevice()
         {
             StartOption("Edit Device on the system");
             /// Very basic but does the job - checks to see if any devices are already in the system to edit
@@ -120,7 +120,7 @@ namespace Assignment_cet2007
             int indexSelection = Convert.ToInt32(Console.ReadLine());
             indexSelection = indexSelection - 1; /// this is due to options given on screen are 1 ahead meaning selction 1 is actually position 0 etc
 
-            if (indexSelection >= 0 && indexSelection <= network.Count - 1)
+            if (indexSelection >= 0 && indexSelection <= Manager.network.Count - 1)
             {
                 Console.WriteLine("you have succesfully chosen a device to edit");
                 Logger.GetInstance().Log("User has successfully chosen to edit a device");
@@ -135,16 +135,16 @@ namespace Assignment_cet2007
                     string ipinput = Console.ReadLine();
                     if (!string.IsNullOrEmpty(nameinput))
                     {
-                        network[indexSelection].Name = nameinput;
-                        network[indexSelection].IpAddress = ipinput;
+                        Manager.network[indexSelection].Name = nameinput;
+                        Manager.network[indexSelection].IpAddress = ipinput;
                         Console.WriteLine("Device successfully updated!");
                     
 
-                         network[indexSelection] = device;
+                        
 
                         Console.WriteLine("Device successfully created!");
                         // Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
-                        FileSystem.FileDevice(network);
+                        FileSystem.FileDevice(Manager.network);
                     }
                     else
                     {
@@ -189,7 +189,7 @@ namespace Assignment_cet2007
         ///  this feature will allow users to search for devices based on the name of device
         /// </summary>
 
-        public void SearchDevice()
+        public static void SearchDevice()
         {
             StartOption("Search for a device on the system");
             checkdevice();
@@ -199,11 +199,11 @@ namespace Assignment_cet2007
 
             if (!string.IsNullOrEmpty(nameinput)) /// ensures that something is entered
             {
-                for (int i = 0; i < network.Count; i++)
+                for (int i = 0; i < Manager.network.Count; i++)
                 {
-                    if (network[i].Name.ToLower().Equals(nameinput))
+                    if (Manager.network[i].Name.ToLower().Equals(nameinput))
                     {
-                        Console.WriteLine(network[i].Details());
+                        Console.WriteLine(Manager.network[i].Details());
                         bfound = true;
                     }
 
@@ -227,7 +227,7 @@ namespace Assignment_cet2007
         /// <summary>
         ///  This method will allow users to update the device status
         /// </summary>
-        public void UpdateStatus() ///status is seperate list due to security reas
+        public static void UpdateStatus() ///status is seperate list due to security reas
         {
             StartOption("");
             Console.WriteLine("Update Device Status");
@@ -237,10 +237,10 @@ namespace Assignment_cet2007
             Console.WriteLine("Enter the status");
             string statusinput = Console.ReadLine();
             indexSelection = indexSelection - 1;
-            network[indexSelection].DeviceStatus = statusinput;
-            FileSystem.FileDevice(network);
+            Manager.network[indexSelection].DeviceStatus = statusinput;
+            FileSystem.FileDevice(Manager.network);
 
-            Device d = network[1];
+            Device d = Manager.network[1];
             Status dstatus = d as Status;
 
             dstatus.ShowStatus();
@@ -249,14 +249,14 @@ namespace Assignment_cet2007
         /// <summary>
         ///  This will allow the user to sort devices
         /// </summary>
-        public void SortDevice()
+        public static void SortDevice()
         {
             StartOption("Sorting Device on the system");
 
             Console.WriteLine("Below is a list of all the devices sorted into aplhabetical order based on the first name of the device." + Environment.NewLine);
             Logger.GetInstance().Log("User has succesfull sorted chosen to sort the devices into alphabetical order");
-            network.Sort(); ///uses compare to automatically
-            foreach (Device device in network)
+            Manager.network.Sort(); ///uses compare to automatically
+            foreach (Device device in Manager.network)
             {
 
                 Console.WriteLine(device.Name);
@@ -266,10 +266,10 @@ namespace Assignment_cet2007
         /// <summary>
         /// This will allow the user to remove devices
         /// </summary>
-        public void RemoveDevice()
+        public static void RemoveDevice()
         {
             StartOption("Remove a device from the system");
-            if (network.Count == 0)
+            if (Manager.network.Count == 0)
             {
                 Console.WriteLine("You need to add devices to the system before you can remove them");
             }
@@ -281,10 +281,10 @@ namespace Assignment_cet2007
                 int indexSelection = Convert.ToInt32(Console.ReadLine());
                 indexSelection = indexSelection - 1; /// this is due to options given on screen are 1 ahead meaning selction 1 is actually position 0 etc
 
-                if (indexSelection >= 0 && indexSelection <= network.Count - 1)
+                if (indexSelection >= 0 && indexSelection <=  Manager.network.Count - 1)
                 {
                     Logger.GetInstance().Log("User has successfully chosen to remove a device ");
-                    network.RemoveAt(indexSelection);
+                    Manager.network.RemoveAt(indexSelection);
                 }
                 FinishOption();
 
@@ -294,7 +294,7 @@ namespace Assignment_cet2007
         /// <summary>
         /// This will allow the user to view the health of the system
         /// </summary>
-        public void ViewHealth() /// implemented once all the file and data handling is done
+        public static void ViewHealth() /// implemented once all the file and data handling is done
 
         {
             StartOption("");
@@ -306,12 +306,12 @@ namespace Assignment_cet2007
         /// <summary>
         /// allow the user to exit the system properly.
         /// </summary>
-        public void Quit()
+        public static void Quit()
         {
             Logger.GetInstance().Log("User has successfully chosen to quit the system");
             Environment.Exit(0); /// sorta works for now
         }
-        public void StartOption(string message)
+        public static void StartOption(string message)
         {
             Console.Clear();
             Console.WriteLine(message + Environment.NewLine);
@@ -319,15 +319,15 @@ namespace Assignment_cet2007
         /// <summary>
         /// responsible for the code to loop back to menu once the user has finished this option.
         /// </summary>
-        public void FinishOption()
+        public static void FinishOption()
         {
             Console.WriteLine(Environment.NewLine + "Press enter to return to the main menu");
             Console.ReadLine();
         }
-        public void ShowDevice()
+        public static void ShowDevice()
         {
             int i = 0;
-            foreach (Device device in network)
+            foreach (Device device in Manager.network)
             {
                 i++;
                 Console.WriteLine(i + ". " + device.Details());
@@ -336,7 +336,7 @@ namespace Assignment_cet2007
 
 
 
-        public void InvalidData()
+        public static void InvalidData()
         {
             Console.WriteLine("Invalid data press enter to try again");
             Console.ReadLine();
@@ -344,9 +344,9 @@ namespace Assignment_cet2007
         }
         
 
-        public void checkdevice()
+        public static void checkdevice()
         {
-            if (network.Count == 0)
+            if (Manager.network.Count == 0)
             {
                 Console.WriteLine("You need to add devices to the system before you can edit them" + Environment.NewLine + "Press enter to be redirected and add users to the system");
                 Console.ReadLine();

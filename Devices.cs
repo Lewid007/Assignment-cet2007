@@ -18,7 +18,7 @@ namespace Assignment_cet2007
         public string Name { get; set; }
         public int IdUnique { get; set; }
         public string IpAddress { get; set; }
-        public List<Device> network;
+        
 
 
 
