@@ -77,6 +77,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Devices.cs" />
+    <Compile Include="Filehandling.cs" />
+    <Compile Include="Functionality.cs" />
+    <Compile Include="LogSystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
