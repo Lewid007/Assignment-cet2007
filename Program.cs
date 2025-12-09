@@ -85,69 +85,76 @@ namespace Assignment_cet2007
                 }
                 /// this section of code will link up the menu choice to the corresponding features with appropriate error handling used
 
+                try { 
+                    Console.WriteLine(Environment.NewLine + "Enter your menu option here");
+                    int Menu_option = Convert.ToInt32(Console.ReadLine());
+                
+                
+                    if (Menu_option < 1 || Menu_option > menuOptions.Length)
+                    {
 
-                Console.WriteLine(Environment.NewLine + "Enter your menu option here");
-                int Menu_option = Convert.ToInt32(Console.ReadLine());
-
-                if (Menu_option < 1 || Menu_option > menuOptions.Length)
-                {
-
-                    menuFunctionality.InvalidData();
-                    Logger.GetInstance().Log("User has entered invalid data for the menu option");
+                        menuFunctionality.InvalidData();
+                        Logger.GetInstance().Log("User has entered invalid data for the menu option");
 
 
-                    PrintMenu();
-                }
-                else if (Menu_option == 1)
-                {
-              
-                  
+                        PrintMenu();
+                    }
+                    else if (Menu_option == 1)
+                    {
+
+
 
                         Logger.GetInstance().Log("User has succesfully choesen to view all devices");
                         menuFunctionality.ViewAll();
+                    }
+                    else if (Menu_option == 2)
+                    {
+                        Logger.GetInstance().Log("User has succesfully chosen to add a new device to the sytem");
+                        menuFunctionality.AddDevice();
+                    }
+                    else if (Menu_option == 3)
+                    {
+                        Logger.GetInstance().Log("User has succesfully chosen to edit a device on the system");
+                        menuFunctionality.EditDevice();
+                    }
+                    else if (Menu_option == 4)
+                    {
+                        Logger.GetInstance().Log("User has succesfully chosen to Search for a device on the system");
+                        menuFunctionality.SearchDevice();
+                    }
+                    else if (Menu_option == 5)
+                    {
+                        Logger.GetInstance().Log("User has succesfully chosen to update the device status on the system");
+                        menuFunctionality.UpdateStatus();
+                    }
+                    else if (Menu_option == 6)
+                    {
+                        Logger.GetInstance().Log("User has succesfully chosen to sort the devices on the system");
+                        menuFunctionality.SortDevice();
+                    }
+                    else if (Menu_option == 7)
+                    {
+                        Logger.GetInstance().Log("User has succesfully chosen to remove a device on the system");
+                        menuFunctionality.RemoveDevice();
+                    }
+                    else if (Menu_option == 8)
+                    {
+                        Logger.GetInstance().Log("User has succesfully chosen to view the sytstem health");
+                        menuFunctionality.ViewHealth();
+                    }
+                    else if (Menu_option == 9)
+                    {
+                        Logger.GetInstance().Log("User has succesfully chosen to quit the system");
+                        menuFunctionality.Quit();
+                    }
                 }
-                else if (Menu_option == 2)
-                {
-                    Logger.GetInstance().Log("User has succesfully chosen to add a new device to the sytem");
-                    menuFunctionality.AddDevice();
-                }
-                else if (Menu_option == 3)
-                {
-                    Logger.GetInstance().Log("User has succesfully chosen to edit a device on the system");
-                    menuFunctionality.EditDevice();
-                }
-                else if (Menu_option == 4)
-                {
-                    Logger.GetInstance().Log("User has succesfully chosen to Search for a device on the system");
-                    menuFunctionality.SearchDevice();
-                }
-                else if (Menu_option == 5)
-                {
-                    Logger.GetInstance().Log("User has succesfully chosen to update the device status on the system");
-                    menuFunctionality.UpdateStatus();
-                }
-                else if (Menu_option == 6)
-                {
-                    Logger.GetInstance().Log("User has succesfully chosen to sort the devices on the system");
-                    menuFunctionality.SortDevice();
-                }
-                else if (Menu_option == 7)
-                {
-                    Logger.GetInstance().Log("User has succesfully chosen to remove a device on the system");
-                    menuFunctionality.RemoveDevice();
-                }
-                else if (Menu_option == 8)
-                {
-                    Logger.GetInstance().Log("User has succesfully chosen to view the sytstem health");
-                    menuFunctionality.ViewHealth();
-                }
-                else if (Menu_option == 9)
-                {
-                    Logger.GetInstance().Log("User has succesfully chosen to quit the system");
-                    menuFunctionality.Quit();
-                }
+                catch
 
-
+                {
+                    throw new InvalidDataException("The data provided is invalid.");
+                    
+                }
+                
                 Console.Clear();
                 PrintMenu();
 
