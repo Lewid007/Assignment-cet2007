@@ -10,6 +10,7 @@ namespace UnitTestProject
     public class LoggerTesting
     {
         [TestMethod]
+        /// this method will test the logger part of the system to ensure functionality is correct
         public void LogToFile()
         {
 

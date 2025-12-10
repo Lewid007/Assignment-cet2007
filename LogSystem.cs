@@ -33,7 +33,7 @@ namespace Assignment_cet2007
         {
         }
         /// <summary>
-        /// 
+        /// creating an instance of the class
         /// </summary>
         /// <returns></returns>
         public static Logger GetInstance()

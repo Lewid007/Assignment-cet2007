@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assignment_cet2007
 {
+    /// <summary>
+    /// This interface is part of the implementation to allow the software to sort the devices within the system
+    /// </summary>
     public interface IComaprable
     {
         int CompareTo(object obj);
@@ -58,7 +61,7 @@ namespace Assignment_cet2007
         public string Details()
         {
 
-            return Name + " " + IpAddress;
+            return Name + " " + IpAddress + " " +DeviceStatus;
         }
 
 

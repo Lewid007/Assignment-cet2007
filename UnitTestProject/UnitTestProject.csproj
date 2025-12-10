@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="LoggerTesting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CheckDeviceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

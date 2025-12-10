@@ -28,17 +28,13 @@ namespace Assignment_cet2007
         public string nameinput { get; set; }
         string ipinput { get; set; }
 
-        
-       
-       
         public static void ViewAll()
         {
+            checkdevice();
             StartOption("Below is a list of all the devices currently within this system in the format device name followed by ip address:");
-            /// potentially need some error exception for when there is no users in the system
-            ShowDevice(); /// reason this is seperate due to reusing the code just to show devices if view all was called this would print excess info if used in other class
+            
+            ShowDevice(); 
             Logger.GetInstance().Log("Device data loaded successfully.");
-
-
             FinishOption();
         }
         /// <summary>
@@ -51,69 +47,66 @@ namespace Assignment_cet2007
 
             try
             {
-                
-                
                     Console.WriteLine("Enter The device name");
                     string nameinput = Console.ReadLine();
 
                     Console.WriteLine("Enter The ip address for the device");
                     string ipinput = Console.ReadLine();
+
                     num = 0;
+
                     if (!string.IsNullOrEmpty(nameinput) && !string.IsNullOrEmpty(ipinput))
                     {
                         num = num + 1;
                         /// id set to one for now but this will have to be made unique at some point
                         Device device = new Device(nameinput, ipinput, num, "offline");
                         Manager.network.Add(device);
-                    }
+                        Console.WriteLine("Device successfully created!");
+                        Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
+                        FileSystem.FileDevice(Manager.network);
+                         try
+                         {
+                            Console.WriteLine("Would you like to add another device");
+                            string repeat = Console.ReadLine().Trim().ToUpper();  /// converts to upper case and removes any extra spaces
+                            if (repeat == "yes".ToUpper())
+                            {
+                                AddDevice();
+                            FinishOption();
+
+                            }
+                            else
+                            {
+                                FinishOption();
+                            }
+                         }
+                         catch(Exception e)
+                         {
+                              FinishOption();
+                         }
+                    } 
                     else
                     {
                         InvalidData();
-
+                        AddDevice();
                     }
-                    
-                    Console.WriteLine("Device successfully created!");
-                    Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
-                    FileSystem.FileDevice(Manager.network);
-                
-                
             }
-            catch
+            catch(Exception e)
             {
                 InvalidData();
                 AddDevice();
             }
-
-            try
-            {
-                Console.WriteLine("Would you like to add another device");
-                string repeat = Console.ReadLine().Trim().ToUpper();  /// converts to upper case and removes any extra spaces
-                if (repeat == "yes".ToUpper())
-                {
-                    AddDevice();
-
-                }
-                else
-                {
-                    FinishOption();
-                }
-            }
-            catch
-            {
-                FinishOption();
-            }
         }
+
         /// <summary>
         ///  This method will allow users to edit devices
         /// </summary>
         public static void EditDevice()
         {
-            StartOption("Edit Device on the system");
-            /// Very basic but does the job - checks to see if any devices are already in the system to edit
             checkdevice();
-
-
+            StartOption("Edit Device on the system");
             ShowDevice();
+            
+       
 
 
             Console.WriteLine("Enter the index of the device you would like to edit");
@@ -137,13 +130,8 @@ namespace Assignment_cet2007
                     {
                         Manager.network[indexSelection].Name = nameinput;
                         Manager.network[indexSelection].IpAddress = ipinput;
-                        Console.WriteLine("Device successfully updated!");
-                    
-
-                        
-
                         Console.WriteLine("Device successfully created!");
-                        // Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
+                        Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
                         FileSystem.FileDevice(Manager.network);
                     }
                     else
@@ -188,11 +176,12 @@ namespace Assignment_cet2007
         /// <summary>
         ///  this feature will allow users to search for devices based on the name of device
         /// </summary>
-
+        ///linear search
         public static void SearchDevice()
         {
-            StartOption("Search for a device on the system");
             checkdevice();
+            StartOption("Search for a device on the system");
+            
             Console.WriteLine("Enter the name of the device you would like to search for");
             string nameinput = Console.ReadLine();
             bool bfound = false;
@@ -201,8 +190,9 @@ namespace Assignment_cet2007
             {
                 for (int i = 0; i < Manager.network.Count; i++)
                 {
+                    Console.WriteLine("Any devices that match your input will be displayed below:");
                     if (Manager.network[i].Name.ToLower().Equals(nameinput))
-                    {
+                    { 
                         Console.WriteLine(Manager.network[i].Details());
                         bfound = true;
                     }
@@ -210,18 +200,25 @@ namespace Assignment_cet2007
                 }
                 if (!bfound)
                 {
-                    Console.WriteLine("No Devices with that name");
-                }
-                else
-                {
+                    Console.WriteLine("No Devices with that name" + Environment.NewLine + "Would you like to try again?");
+                    string repeat = Console.ReadLine().Trim().ToUpper();  /// converts to upper case and removes any extra spaces
+                    if (repeat == "yes".ToUpper())
+                    {
+                        SearchDevice();
 
+                    }
+                    else
+                    {
+                        FinishOption();
+                    }
                 }
+                
             }
             else
             {
                 SearchDevice();
             }
-            FinishOption();
+           
 
         }
         /// <summary>
@@ -229,13 +226,15 @@ namespace Assignment_cet2007
         /// </summary>
         public static void UpdateStatus() ///status is seperate list due to security reas
         {
+            checkdevice();
             StartOption("");
+            
             Console.WriteLine("Update Device Status");
             ShowDevice();
             Console.WriteLine("Enter the index of the device you would like to update the status");
             int indexSelection = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("Enter the status");
-            string statusinput = Console.ReadLine();
+            string statusinput = Console.ReadLine(); //// need validation on this input
             indexSelection = indexSelection - 1;
             Manager.network[indexSelection].DeviceStatus = statusinput;
             FileSystem.FileDevice(Manager.network);
@@ -252,7 +251,7 @@ namespace Assignment_cet2007
         public static void SortDevice()
         {
             StartOption("Sorting Device on the system");
-
+            checkdevice();
             Console.WriteLine("Below is a list of all the devices sorted into aplhabetical order based on the first name of the device." + Environment.NewLine);
             Logger.GetInstance().Log("User has succesfull sorted chosen to sort the devices into alphabetical order");
             Manager.network.Sort(); ///uses compare to automatically
@@ -268,7 +267,9 @@ namespace Assignment_cet2007
         /// </summary>
         public static void RemoveDevice()
         {
+            checkdevice();
             StartOption("Remove a device from the system");
+            
             if (Manager.network.Count == 0)
             {
                 Console.WriteLine("You need to add devices to the system before you can remove them");
@@ -284,12 +285,13 @@ namespace Assignment_cet2007
                 if (indexSelection >= 0 && indexSelection <=  Manager.network.Count - 1)
                 {
                     Logger.GetInstance().Log("User has successfully chosen to remove a device ");
+                    Console.WriteLine("device has been removed successfully");
                     Manager.network.RemoveAt(indexSelection);
                 }
                 FinishOption();
 
             }
-            FinishOption();
+            
         }
         /// <summary>
         /// This will allow the user to view the health of the system
@@ -343,13 +345,19 @@ namespace Assignment_cet2007
             Console.Clear();
         }
         
-
+        /// <summary>
+        ///  gonna unit test this
+        /// </summary>
         public static void checkdevice()
         {
+            Console.Clear();
             if (Manager.network.Count == 0)
             {
-                Console.WriteLine("You need to add devices to the system before you can edit them" + Environment.NewLine + "Press enter to be redirected and add users to the system");
+                Console.WriteLine("You need to add devices at least one device to the system before you can use the system" + Environment.NewLine + "Press enter to be redirected to add new device to the system");
+               
                 Console.ReadLine();
+                AddDevice();
+                
 
             }
         }
