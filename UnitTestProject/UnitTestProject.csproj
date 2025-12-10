@@ -52,6 +52,7 @@
     <Compile Include="LoggerTesting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CheckDeviceTest.cs" />
+    <Compile Include="ObjectSorting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

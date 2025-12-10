@@ -72,7 +72,8 @@ namespace Assignment_cet2007
                 Console.WriteLine(i + 1 + "." + menuOptions[i]);
             }
             /// this section of code will link up the menu choice to the corresponding features with appropriate error handling used
-
+            
+        
             try
             {
                 Console.WriteLine(Environment.NewLine + "Enter your menu option here");
@@ -150,11 +151,11 @@ namespace Assignment_cet2007
 
 
         }
+    }
 
 
 
-}
-internal class Program
+    internal class Program
     {
 
         

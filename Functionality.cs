@@ -26,7 +26,7 @@ namespace Assignment_cet2007
        
         public  static int num { get; private set; }
         public string nameinput { get; set; }
-        string ipinput { get; set; }
+        public string ipinput { get; set; }
 
         public static void ViewAll()
         {

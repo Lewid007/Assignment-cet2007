@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Assignment_cet2007
 {
     /// <summary>
     /// This interface is part of the implementation to allow the software to sort the devices within the system
     /// </summary>
-    public interface IComaprable
+    public interface IComparable
     {
         int CompareTo(object obj);
     }
