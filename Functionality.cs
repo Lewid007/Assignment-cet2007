@@ -299,10 +299,33 @@ namespace Assignment_cet2007
         public static void ViewHealth() /// implemented once all the file and data handling is done
 
         {
-            StartOption("");
+            
+            StartOption("View the health of the system devices");
             //// this will show the log files and json files etc
-            //loadfile("SystemDevice.json");
-            Console.WriteLine("View the health of the system devices");
+            Console.WriteLine("There is two options to view the system health would you like to view please enter the option you would like below:" + Environment.NewLine + "a) Full device specifications " + Environment.NewLine + "b) Full system Logs.");
+           string UserChoice = Console.ReadLine().Trim().ToUpper();
+            if (UserChoice==null)
+            {
+                InvalidData();
+                ViewHealth();
+
+            }
+            else if (UserChoice== "a".ToUpper())
+            {
+                checkdevice(); // must be device to show
+                Console.WriteLine("This is the full specifications of devices on the system");
+                FileSystem.loadfile("SystemDevice.json");
+            }
+            else if (UserChoice == "b".ToUpper())
+            {
+                Console.WriteLine("This is the full System Logs");
+               string Logs = File.ReadAllText("Logs.txt");
+                Console.WriteLine(Logs);
+                
+            }
+
+
+
             FinishOption();
         }
         /// <summary>

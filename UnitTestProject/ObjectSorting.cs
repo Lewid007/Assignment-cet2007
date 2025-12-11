@@ -9,18 +9,18 @@ namespace UnitTestProject
     public class ObjectSorting
     {
         /// <summary>
-        /// when comparing two objetcs there is 3 possible solutions so it is important to test all three solutions
+        /// when comparing two objetcs there is 3 possible outcomes when comparing 2 devices/objects so it is important to test all three solutions
         /// </summary>
         [TestMethod]
         public void SameObjects()
         {
             var device1 = new Device("Printer" , "1122:3333:4444:5567" , 1 , "offline");
-            var device2 = new Device("Iphone" , "1122:3333:4444:5567" , 1 , "offline");
+            var device2 = new Device("Printer" , "1122:3333:4444:5567" , 1 , "offline");
            int CompareResult = device1.CompareTo(device2);
-            if (CompareResult == 0)
-            {
-                Assert.AreEqual(0, CompareResult);
-            }
+            
+            
+                Assert.AreEqual(0,CompareResult);
+            
         }
         [TestMethod]
            public void secondObjectless()
@@ -28,22 +28,19 @@ namespace UnitTestProject
                 var device1 = new Device("Printer" , "1122:3333:4444:5567" , 1 , "offline");
                var device2 = new Device("Iphone" , "1122:3333:4435:5567" , 1 , "offline");
               var CompareResult = device1.CompareTo(device2);
-               if (CompareResult == 0)
-               {
-                   Assert.Equals(0, CompareResult);
-               }
+               
+                   Assert.IsTrue( CompareResult>0);
+               
            }
         [TestMethod]
-           public void secondobjectgreater()
-           {
+        public void secondobjectgreater()
+        {
             var device1 = new Device("Iphone", "1122:3333:4444:5567", 1, "offline");
             var device2 = new Device("Printer", "1122:3333:4435:5567", 1, "offline");
             var CompareResult = device1.CompareTo(device2);
-            if (CompareResult == 0)
-            {
-                Assert.Equals(0, CompareResult);
-            }
+           
+                Assert.IsTrue(CompareResult < 0);
+
         }
-        
     }
 }

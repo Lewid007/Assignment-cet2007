@@ -22,32 +22,16 @@ using System.Runtime.InteropServices;
 
 namespace Assignment_cet2007
 {
-       static class FileSystem 
+    static class FileSystem 
     {
        
        public static void FileDevice(List<Device> network)
         {
+            FileExist();
             /// serialize the data
             var options = new JsonSerializerOptions { WriteIndented = true };
             string json = JsonSerializer.Serialize(network, options);
             File.WriteAllText("SystemDevice.json", json);
-
-
-            /// deserializing the data
-            string jsonData = File.ReadAllText("SystemDevice.json");
-            List<Device> devicelist2 = JsonSerializer.Deserialize<List<Device>>(jsonData);
-
-
-            try
-            {
-                jsonData = File.ReadAllText("SystemDevice.json");
-
-            }
-            catch
-            {
-                Console.WriteLine("file not found");
-                File.WriteAllText("student.json", "[]");
-            }
 
             try
             {
@@ -63,16 +47,12 @@ namespace Assignment_cet2007
         }
         public static void loadfile(string message)
         {
-
+            FileExist();
             try
             {
+              
                 deserialize();
-                using (StreamReader reader = new StreamReader(message))
-                {
-                    string text = reader.ReadToEnd();
-                    deserialize();
-                    Console.WriteLine(text);
-                }
+                
             }
             catch (IOException e)
             {
@@ -85,6 +65,24 @@ namespace Assignment_cet2007
             /// deserializing the data
             string jsonData = File.ReadAllText("SystemDevice.json");
             List<Device> devicelist2 = JsonSerializer.Deserialize<List<Device>>(jsonData);
+            foreach (Device dev in devicelist2)
+            {
+                Console.WriteLine(dev.Name + " " + dev.IpAddress + " " + dev.IdUnique + " " + dev.DeviceStatus);
+            }
+        }
+        public static void FileExist()
+        {
+            try
+            {
+                string jsonData = File.ReadAllText("SystemDevice.json");
+                jsonData = File.ReadAllText("SystemDevice.json");
+
+            }
+            catch (FileNotFoundException ex) 
+            {
+                Console.WriteLine("file not found");
+                File.WriteAllText("student.json", "[]");
+            }
         }
     }
 }
