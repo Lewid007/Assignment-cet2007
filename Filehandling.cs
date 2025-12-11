@@ -22,9 +22,15 @@ using System.Runtime.InteropServices;
 
 namespace Assignment_cet2007
 {
-    static class FileSystem 
+   /// <summary>
+   /// This class is responsible for all the json file handiling.
+   /// </summary>
+    public static class FileSystem 
     {
-       
+       /// <summary>
+       /// This method will file devices to the system
+       /// </summary>
+      
        public static void FileDevice(List<Device> network)
         {
             FileExist();
@@ -45,6 +51,10 @@ namespace Assignment_cet2007
                 File.WriteAllText("SystemDevice.json", "[]"); ///reset the file
             }
         }
+        /// <summary>
+        /// This will check if a fiel exist then load it when called
+        /// </summary>
+       
         public static void loadfile(string message)
         {
             FileExist();
@@ -60,6 +70,9 @@ namespace Assignment_cet2007
                 Console.WriteLine(e.Message);
             }
         }
+        /// <summary>
+        /// This method will turn the json file data back into human readable data and print it to the console when called.
+        /// </summary>
         public static void deserialize()
         {
             /// deserializing the data
@@ -70,6 +83,9 @@ namespace Assignment_cet2007
                 Console.WriteLine(dev.Name + " " + dev.IpAddress + " " + dev.IdUnique + " " + dev.DeviceStatus);
             }
         }
+        /// <summary>
+        /// This will check to see if a file exists.
+        /// </summary>
         public static void FileExist()
         {
             try

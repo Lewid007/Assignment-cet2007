@@ -20,40 +20,35 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Assignment_cet2007
 {
-    ///  play around with colors font size etc-  Console.BackgroundColor = ConsoleColor.Green;
+    /// <summary>
+    /// This class is responsible for controlling the menu system within the project
+    /// </summary>
     public class Manager
     {
-        public int Menu_option { get; private set; }
-        public int num { get; private set; }
-        public string nameinput { get; set; }
+        public int MenuOption { get; private set; }
+        public int Num { get; private set; }
+        public string NameInput { get; set; }
         string ipinput { get; set; }
-        public static List<Device> network = new List<Device>();
+        public static List<Device> Network = new List<Device>();
 
         /// <summary>
         /// creates and instance of the manager class
         /// </summary>
-        /// 
-
         public Manager()
-
-        {
-
-
-
-
-            FileSystem.FileDevice(network);
+        { 
+            FileSystem.FileDevice(Network);
             PrintMenu();
 
         }
 
         /// <summary>
-        /// This method will display the menu and take a user input and match it to the correct choice they pick. this could and will likely be changed into an string array to make adding menu items a lot simpler
+        /// This method will display the menu and take a user input and match it to the correct menu choice they pick. 
         /// </summary>
         public void PrintMenu()
         {
             Logger.GetInstance().Log("Menu Loaded successfully");
             Console.WriteLine("WELCOME" + Environment.NewLine);
-            /// creating menu using string array to make adding and updating menu choice items easier in the future
+            /// Menu is created by using string array to make adding and updating menu choice items easier in the future
             string[] menuOptions = new string[]
             {
                         "View All Devices",
@@ -71,9 +66,8 @@ namespace Assignment_cet2007
             {
                 Console.WriteLine(i + 1 + "." + menuOptions[i]);
             }
-            /// this section of code will link up the menu choice to the corresponding features with appropriate error handling used
-            
-        
+
+            /// This section of code will link up the menu choice to the corresponding features with appropriate error handling used.
             try
             {
                 Console.WriteLine(Environment.NewLine + "Enter your menu option here");
@@ -83,62 +77,57 @@ namespace Assignment_cet2007
                 if (Menu_option < 1 || Menu_option > menuOptions.Length)
                 {
 
-                    menuFunctionality.InvalidData();
+                    MenuFunctionality.InvalidData();
                     Logger.GetInstance().Log("User has entered invalid data for the menu option");
-
-
                     PrintMenu();
                 }
                 else if (Menu_option == 1)
                 {
-
-
-
                     Logger.GetInstance().Log("User has succesfully choesen to view all devices");
-                    menuFunctionality.ViewAll();
+                    MenuFunctionality.ViewAll();
                 }
                 else if (Menu_option == 2)
                 {
                     Logger.GetInstance().Log("User has succesfully chosen to add a new device to the sytem");
-                    menuFunctionality.AddDevice();
+                    MenuFunctionality.AddDevice();
                 }
                 else if (Menu_option == 3)
                 {
                     Logger.GetInstance().Log("User has succesfully chosen to edit a device on the system");
-                    menuFunctionality.EditDevice();
+                    MenuFunctionality.EditDevice();
                 }
                 else if (Menu_option == 4)
                 {
                     Logger.GetInstance().Log("User has succesfully chosen to Search for a device on the system");
-                    menuFunctionality.SearchDevice();
+                    MenuFunctionality.SearchDevice();
                 }
                 else if (Menu_option == 5)
                 {
                     Logger.GetInstance().Log("User has succesfully chosen to update the device status on the system");
-                    menuFunctionality.UpdateStatus();
+                    MenuFunctionality.UpdateStatus();
                 }
                 else if (Menu_option == 6)
                 {
                     Logger.GetInstance().Log("User has succesfully chosen to sort the devices on the system");
-                    menuFunctionality.SortDevice();
+                    MenuFunctionality.SortDevice();
                 }
                 else if (Menu_option == 7)
                 {
                     Logger.GetInstance().Log("User has succesfully chosen to remove a device on the system");
-                    menuFunctionality.RemoveDevice();
+                    MenuFunctionality.RemoveDevice();
                 }
                 else if (Menu_option == 8)
                 {
                     Logger.GetInstance().Log("User has succesfully chosen to view the sytstem health");
-                    menuFunctionality.ViewHealth();
+                    MenuFunctionality.ViewHealth();
                 }
                 else if (Menu_option == 9)
                 {
                     Logger.GetInstance().Log("User has succesfully chosen to quit the system");
-                    menuFunctionality.Quit();
+                    MenuFunctionality.Quit();
                 }
             }
-            catch
+            catch(Exception e)
 
             {
                 Console.WriteLine("error");
@@ -147,21 +136,17 @@ namespace Assignment_cet2007
 
             Console.Clear();
             PrintMenu();
-
-
-
         }
     }
-
-
-
+/// <summary>
+///  Main program is very short due to the the dependncy on the Manager class that manages the entire menu system.
+/// </summary>
     internal class Program
     {
 
         
         static void Main(string[] args)
         {
-
 
             Console.Clear();
             Manager manager = new Manager();

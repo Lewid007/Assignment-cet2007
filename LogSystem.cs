@@ -25,24 +25,21 @@ namespace Assignment_cet2007
     /// </summary>
     public class Logger
     {
-
         private static Logger instance;
         private static string logFile = "Logs.txt";
-
         private Logger()
         {
         }
         /// <summary>
         /// creating an instance of the class
         /// </summary>
-        /// <returns></returns>
+     
         public static Logger GetInstance()
         {
             if (instance == null)
 
                 instance = new Logger();
             return instance;
-
 
         }
         /// <summary>

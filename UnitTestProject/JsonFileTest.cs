@@ -1,5 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Assignment_cet2007;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.IO;
 
 namespace UnitTestProject
 {
@@ -7,8 +9,11 @@ namespace UnitTestProject
     public class JsonFileTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void fileexisttest()
         {
+            FileSystem.FileExist();
+            Assert.IsTrue(File.Exists("SystemDevice.json"));
+          
         }
     }
 }

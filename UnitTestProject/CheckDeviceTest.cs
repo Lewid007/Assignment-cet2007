@@ -11,8 +11,8 @@ namespace UnitTestProject
         [TestMethod]
         public void Is_List_empty()
         {
-             Manager.network.Clear(); /// ensures the list is empty
-             Assert.AreEqual(0, Manager.network.Count);
+             Manager.Network.Clear(); /// ensures the list is empty
+             Assert.AreEqual(0, Manager.Network.Count);
          
         }
     }

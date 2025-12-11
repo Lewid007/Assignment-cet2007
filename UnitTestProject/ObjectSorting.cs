@@ -6,11 +6,12 @@ using System.Globalization;
 namespace UnitTestProject
 {
     [TestClass]
+    /// <summary>
+    /// when comparing two objetcs there is 3 possible outcomes when comparing 2 devices/objects so it is important to test all three solutions
+    /// </summary>
     public class ObjectSorting
     {
-        /// <summary>
-        /// when comparing two objetcs there is 3 possible outcomes when comparing 2 devices/objects so it is important to test all three solutions
-        /// </summary>
+  
         [TestMethod]
         public void SameObjects()
         {

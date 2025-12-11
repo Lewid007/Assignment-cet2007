@@ -21,22 +21,28 @@ using static Assignment_cet2007.Program;
 
 namespace Assignment_cet2007
 {
-    class menuFunctionality 
+    /// <summary>
+    /// This class is responsible for controlling all of the menu choices.
+    /// </summary>
+    class MenuFunctionality 
     {
        
-        public  static int num { get; private set; }
-        public string nameinput { get; set; }
-        public string ipinput { get; set; }
+        public  static int Num { get; private set; }
+        public string NameInput { get; set; }
+        public string IpInput { get; set; }
 
+        /// <summary>
+        /// this method is responsible for allowing the user to view all the devices on the system
+        /// </summary>
         public static void ViewAll()
         {
             checkdevice();
             StartOption("Below is a list of all the devices currently within this system in the format device name followed by ip address:");
-            
             ShowDevice(); 
             Logger.GetInstance().Log("Device data loaded successfully.");
             FinishOption();
         }
+
         /// <summary>
         /// This method will allow the user to add a device to the system
         /// </summary>
@@ -44,26 +50,25 @@ namespace Assignment_cet2007
         {
             Logger.GetInstance().Log("User has successfully chosen to add a device");
             StartOption("Adding a Device to the system");
-
             try
             {
                     Console.WriteLine("Enter The device name");
                     string nameinput = Console.ReadLine();
 
-                    Console.WriteLine("Enter The ip address for the device");
+                    Console.WriteLine("Enter The ip address for the device please use the format of 8 groups of 4 hexadecmial digits separated by colons (ipv6)");
                     string ipinput = Console.ReadLine();
 
-                    num = 0;
+                    Num = 0;
 
                     if (!string.IsNullOrEmpty(nameinput) && !string.IsNullOrEmpty(ipinput))
                     {
-                        num = num + 1;
+                        Num = Num + 1;
                         /// id set to one for now but this will have to be made unique at some point
-                        Device device = new Device(nameinput, ipinput, num, "offline");
-                        Manager.network.Add(device);
+                        Device device = new Device(nameinput, ipinput, Num, "offline");
+                        Manager.Network.Add(device);
                         Console.WriteLine("Device successfully created!");
                         Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
-                        FileSystem.FileDevice(Manager.network);
+                        FileSystem.FileDevice(Manager.Network);
                          try
                          {
                             Console.WriteLine("Would you like to add another device");
@@ -79,7 +84,7 @@ namespace Assignment_cet2007
                                 FinishOption();
                             }
                          }
-                         catch(Exception e)
+                         catch(Exception )
                          {
                               FinishOption();
                          }
@@ -90,7 +95,7 @@ namespace Assignment_cet2007
                         AddDevice();
                     }
             }
-            catch(Exception e)
+            catch(Exception )
             {
                 InvalidData();
                 AddDevice();
@@ -105,34 +110,32 @@ namespace Assignment_cet2007
             checkdevice();
             StartOption("Edit Device on the system");
             ShowDevice();
-            
-       
-
 
             Console.WriteLine("Enter the index of the device you would like to edit");
             int indexSelection = Convert.ToInt32(Console.ReadLine());
-            indexSelection = indexSelection - 1; /// this is due to options given on screen are 1 ahead meaning selction 1 is actually position 0 etc
+            indexSelection = indexSelection - 1;   /// this is due to options given on screen are 1 ahead meaning selction 1 is actually position 0 etc
 
-            if (indexSelection >= 0 && indexSelection <= Manager.network.Count - 1)
+            if (indexSelection >= 0 && indexSelection <= Manager.Network.Count - 1)
             {
                 Console.WriteLine("you have succesfully chosen a device to edit");
                 Logger.GetInstance().Log("User has successfully chosen to edit a device");
-
 
                 try
                 {
                     Console.WriteLine("Enter The device name");
                     string nameinput = Console.ReadLine();
 
-                    Console.WriteLine("Enter The ip address for the device");
+                    Console.WriteLine("Enter The ip address for the device please use the format of 8 groups of 4 hexadecmial digits separated by colons (ipv6)");
                     string ipinput = Console.ReadLine();
                     if (!string.IsNullOrEmpty(nameinput))
-                    {
-                        Manager.network[indexSelection].Name = nameinput;
-                        Manager.network[indexSelection].IpAddress = ipinput;
+                    {   
+                        /// updates the devices across the system
+                        Manager.Network[indexSelection].Name = nameinput;
+                        Manager.Network[indexSelection].IpAddress = ipinput;
+
                         Console.WriteLine("Device successfully created!");
                         Logger.GetInstance().Log("New Device " + nameinput + " added to the system");
-                        FileSystem.FileDevice(Manager.network);
+                        FileSystem.FileDevice(Manager.Network);
                     }
                     else
                     {
@@ -141,7 +144,7 @@ namespace Assignment_cet2007
 
                 }
 
-                catch
+                catch(Exception)
                 {
                     InvalidData();
                     EditDevice();
@@ -153,7 +156,6 @@ namespace Assignment_cet2007
                     if (repeat == "yes".ToUpper())
                     {
                         EditDevice();
-
                     }
                     else
                     {
@@ -171,12 +173,10 @@ namespace Assignment_cet2007
                 EditDevice();
             }
 
-
         }
         /// <summary>
-        ///  this feature will allow users to search for devices based on the name of device
+        /// This feature will allow users to carry out a linear search for devices based on the first name of device within the system.
         /// </summary>
-        ///linear search
         public static void SearchDevice()
         {
             checkdevice();
@@ -188,15 +188,14 @@ namespace Assignment_cet2007
 
             if (!string.IsNullOrEmpty(nameinput)) /// ensures that something is entered
             {
-                for (int i = 0; i < Manager.network.Count; i++)
+                for (int i = 0; i < Manager.Network.Count; i++)
                 {
                     Console.WriteLine("Any devices that match your input will be displayed below:");
-                    if (Manager.network[i].Name.ToLower().Equals(nameinput))
+                    if (Manager.Network[i].Name.ToLower().Equals(nameinput))
                     { 
-                        Console.WriteLine(Manager.network[i].Details());
+                        Console.WriteLine(Manager.Network[i].Details());
                         bfound = true;
                     }
-
                 }
                 if (!bfound)
                 {
@@ -211,20 +210,18 @@ namespace Assignment_cet2007
                     {
                         FinishOption();
                     }
-                }
-                
+                }    
             }
             else
             {
                 SearchDevice();
-            }
-           
-
+            } 
         }
+
         /// <summary>
         ///  This method will allow users to update the device status
         /// </summary>
-        public static void UpdateStatus() ///status is seperate list due to security reas
+        public static void UpdateStatus()
         {
             checkdevice();
             StartOption("");
@@ -236,17 +233,16 @@ namespace Assignment_cet2007
             Console.WriteLine("Enter the status");
             string statusinput = Console.ReadLine(); //// need validation on this input
             indexSelection = indexSelection - 1;
-            Manager.network[indexSelection].DeviceStatus = statusinput;
-            FileSystem.FileDevice(Manager.network);
-
-            Device d = Manager.network[1];
+            Manager.Network[indexSelection].DeviceStatus = statusinput;
+            FileSystem.FileDevice(Manager.Network);
+            Device d = Manager.Network[1];
             Status dstatus = d as Status;
-
             dstatus.ShowStatus();
             FinishOption();
         }
+
         /// <summary>
-        ///  This will allow the user to sort devices
+        ///  This will allow the user to sort devices alphabeticaly using built in sort methods.
         /// </summary>
         public static void SortDevice()
         {
@@ -254,8 +250,8 @@ namespace Assignment_cet2007
             checkdevice();
             Console.WriteLine("Below is a list of all the devices sorted into aplhabetical order based on the first name of the device." + Environment.NewLine);
             Logger.GetInstance().Log("User has succesfull sorted chosen to sort the devices into alphabetical order");
-            Manager.network.Sort(); ///uses compare to automatically
-            foreach (Device device in Manager.network)
+            Manager.Network.Sort(); ///uses compare to automatically
+            foreach (Device device in Manager.Network)
             {
 
                 Console.WriteLine(device.Name);
@@ -270,7 +266,7 @@ namespace Assignment_cet2007
             checkdevice();
             StartOption("Remove a device from the system");
             
-            if (Manager.network.Count == 0)
+            if (Manager.Network.Count == 0)
             {
                 Console.WriteLine("You need to add devices to the system before you can remove them");
             }
@@ -282,22 +278,19 @@ namespace Assignment_cet2007
                 int indexSelection = Convert.ToInt32(Console.ReadLine());
                 indexSelection = indexSelection - 1; /// this is due to options given on screen are 1 ahead meaning selction 1 is actually position 0 etc
 
-                if (indexSelection >= 0 && indexSelection <=  Manager.network.Count - 1)
+                if (indexSelection >= 0 && indexSelection <=  Manager.Network.Count - 1)
                 {
                     Logger.GetInstance().Log("User has successfully chosen to remove a device ");
                     Console.WriteLine("device has been removed successfully");
-                    Manager.network.RemoveAt(indexSelection);
+                    Manager.Network.RemoveAt(indexSelection);
                 }
                 FinishOption();
-
-            }
-            
+            }    
         }
         /// <summary>
         /// This will allow the user to view the health of the system
         /// </summary>
-        public static void ViewHealth() /// implemented once all the file and data handling is done
-
+        public static void ViewHealth() 
         {
             
             StartOption("View the health of the system devices");
@@ -329,38 +322,46 @@ namespace Assignment_cet2007
             FinishOption();
         }
         /// <summary>
-        /// allow the user to exit the system properly.
+        /// This will allow the user to exit the system properly.
         /// </summary>
         public static void Quit()
         {
             Logger.GetInstance().Log("User has successfully chosen to quit the system");
-            Environment.Exit(0); /// sorta works for now
+            Environment.Exit(0); 
         }
+
+        /// <summary>
+        /// Refactored so not reusing same code each time a menu option is called
+        /// </summary>
         public static void StartOption(string message)
         {
             Console.Clear();
             Console.WriteLine(message + Environment.NewLine);
         }
         /// <summary>
-        /// responsible for the code to loop back to menu once the user has finished this option.
+        /// refactored so that there is code to loop back to menu once the user has finished the option.
         /// </summary>
         public static void FinishOption()
         {
             Console.WriteLine(Environment.NewLine + "Press enter to return to the main menu");
             Console.ReadLine();
         }
+        /// <summary>
+        /// This method will show the devices on the system
+        /// </summary>
         public static void ShowDevice()
         {
             int i = 0;
-            foreach (Device device in Manager.network)
+            foreach (Device device in Manager.Network)
             {
                 i++;
                 Console.WriteLine(i + ". " + device.Details());
             }
         }
 
-
-
+        /// <summary>
+        /// This is called when invalid data is entered
+        /// </summary>
         public static void InvalidData()
         {
             Console.WriteLine("Invalid data press enter to try again");
@@ -369,19 +370,16 @@ namespace Assignment_cet2007
         }
         
         /// <summary>
-        ///  gonna unit test this
+        ///  Checks to see if there is any devices on the system.
         /// </summary>
         public static void checkdevice()
         {
             Console.Clear();
-            if (Manager.network.Count == 0)
+            if (Manager.Network.Count == 0)
             {
                 Console.WriteLine("You need to add devices at least one device to the system before you can use the system" + Environment.NewLine + "Press enter to be redirected to add new device to the system");
-               
                 Console.ReadLine();
                 AddDevice();
-                
-
             }
         }
     }
