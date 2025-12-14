@@ -7,3 +7,7 @@ This project will simulate a network monitoring system and allow you to add remo
 ## How to run
 When running this project you need all files to be downloaded into the same folder for the solution to run due to different aspects of the solution (classes) are spread across multiple files that work together to form one large solution.
 
+## More info
+
+More Info about this project can be found in the wiki page --> https://github.com/Lewid007/Assignment-cet2007/wiki/wiki-page-assignment 
+
