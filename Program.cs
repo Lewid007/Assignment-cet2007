@@ -42,7 +42,7 @@ namespace Assignment_cet2007
         }
 
         /// <summary>
-        /// This method will display the menu and take a user input and match it to the correct menu choice they pick. 
+        /// This method will display the menu and take a user input and match it to the correct menu choice they pick.  
         /// </summary>
         public void PrintMenu()
         {
