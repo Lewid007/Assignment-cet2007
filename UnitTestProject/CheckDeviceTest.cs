@@ -9,7 +9,7 @@ namespace UnitTestProject
     public class CheckDeviceTest    
     {
         [TestMethod]
-        public void Is_List_empty()
+        public void IsListempty()
         {
              Manager.Network.Clear(); /// ensures the list is empty
              Assert.AreEqual(0, Manager.Network.Count);

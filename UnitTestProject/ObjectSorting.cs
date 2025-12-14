@@ -13,6 +13,8 @@ namespace UnitTestProject
     {
   
         [TestMethod]
+     
+       
         public void SameObjects()
         {
             var device1 = new Device("Printer" , "1122:3333:4444:5567" , 1 , "offline");
@@ -24,7 +26,7 @@ namespace UnitTestProject
             
         }
         [TestMethod]
-           public void secondObjectless()
+           public void SecondObjectleLess()
            {
                 var device1 = new Device("Printer" , "1122:3333:4444:5567" , 1 , "offline");
                var device2 = new Device("Iphone" , "1122:3333:4435:5567" , 1 , "offline");
@@ -34,7 +36,7 @@ namespace UnitTestProject
                
            }
         [TestMethod]
-        public void secondobjectgreater()
+        public void SecondObjectGreater()
         {
             var device1 = new Device("Iphone", "1122:3333:4444:5567", 1, "offline");
             var device2 = new Device("Printer", "1122:3333:4435:5567", 1, "offline");

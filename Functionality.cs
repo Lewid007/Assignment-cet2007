@@ -34,9 +34,9 @@ namespace Assignment_cet2007
         /// <summary>
         /// this method is responsible for allowing the user to view all the devices on the system
         /// </summary>
-        public static void ViewAll()
+        public  static void ViewAll()
         {
-            checkdevice();
+            CheckDevice();
             StartOption("Below is a list of all the devices currently within this system in the format device name followed by ip address:");
             ShowDevice(); 
             Logger.GetInstance().Log("Device data loaded successfully.");
@@ -107,7 +107,7 @@ namespace Assignment_cet2007
         /// </summary>
         public static void EditDevice()
         {
-            checkdevice();
+            CheckDevice();
             StartOption("Edit Device on the system");
             ShowDevice();
 
@@ -179,7 +179,7 @@ namespace Assignment_cet2007
         /// </summary>
         public static void SearchDevice()
         {
-            checkdevice();
+            CheckDevice();
             StartOption("Search for a device on the system");
             
             Console.WriteLine("Enter the name of the device you would like to search for");
@@ -223,7 +223,7 @@ namespace Assignment_cet2007
         /// </summary>
         public static void UpdateStatus()
         {
-            checkdevice();
+            CheckDevice();
             StartOption("");
             
             Console.WriteLine("Update Device Status");
@@ -231,7 +231,7 @@ namespace Assignment_cet2007
             Console.WriteLine("Enter the index of the device you would like to update the status");
             int indexSelection = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("Enter the status");
-            string statusinput = Console.ReadLine(); //// need validation on this input
+            string statusinput = Console.ReadLine(); 
             indexSelection = indexSelection - 1;
             Manager.Network[indexSelection].DeviceStatus = statusinput;
             FileSystem.FileDevice(Manager.Network);
@@ -247,7 +247,7 @@ namespace Assignment_cet2007
         public static void SortDevice()
         {
             StartOption("Sorting Device on the system");
-            checkdevice();
+            CheckDevice();
             Console.WriteLine("Below is a list of all the devices sorted into aplhabetical order based on the first name of the device." + Environment.NewLine);
             Logger.GetInstance().Log("User has succesfull sorted chosen to sort the devices into alphabetical order");
             Manager.Network.Sort(); ///uses compare to automatically
@@ -263,7 +263,7 @@ namespace Assignment_cet2007
         /// </summary>
         public static void RemoveDevice()
         {
-            checkdevice();
+            CheckDevice();
             StartOption("Remove a device from the system");
             
             if (Manager.Network.Count == 0)
@@ -305,9 +305,9 @@ namespace Assignment_cet2007
             }
             else if (UserChoice== "a".ToUpper())
             {
-                checkdevice(); // must be device to show
+                CheckDevice(); // must be device to show
                 Console.WriteLine("This is the full specifications of devices on the system");
-                FileSystem.loadfile("SystemDevice.json");
+                FileSystem.LoadFile("SystemDevice.json");
             }
             else if (UserChoice == "b".ToUpper())
             {
@@ -372,7 +372,8 @@ namespace Assignment_cet2007
         /// <summary>
         ///  Checks to see if there is any devices on the system.
         /// </summary>
-        public static void checkdevice()
+        public static void CheckDevice()
+            
         {
             Console.Clear();
             if (Manager.Network.Count == 0)

@@ -55,7 +55,7 @@ namespace Assignment_cet2007
         /// This will check if a fiel exist then load it when called
         /// </summary>
        
-        public static void loadfile(string message)
+        public static void LoadFile(string message)
         {
             FileExist();
             try

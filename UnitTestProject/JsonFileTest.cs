@@ -9,7 +9,7 @@ namespace UnitTestProject
     public class JsonFileTest
     {
         [TestMethod]
-        public void fileexisttest()
+        public void FileExistTest()
         {
             FileSystem.FileExist();
             Assert.IsTrue(File.Exists("SystemDevice.json"));
